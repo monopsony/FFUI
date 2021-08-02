@@ -1,0 +1,21 @@
+{
+  "connectedWorlds": [
+    "Lich",
+    "Odin",
+    "Phoenix",
+    "Zodiark",
+    "Twintania"
+  ],
+  "retainerBL": [
+    "Territum",
+    "Teritum",
+    "Tarvi",
+    "Sharra",
+    "Sashalle",
+    "Sellshit",
+    "Sellgarbage",
+    "Sellcrap"
+  ],
+  "world": "Shiva",
+  "nSemaphores":10
+}
