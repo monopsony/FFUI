@@ -6,7 +6,7 @@ class itemCraftConfirmWidget(confirmWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.eventSubscribe("ITEMLISTTABLE_DATA_SELECTED", self.setSelectedItem)
+        self.eventSubscribe("ITEMLIST_ITEM_SELECTED", self.setSelectedItem)
         self.eventSubscribe("CLIENT_FREE", self.applyVisibility)
         self.setText("Something something about crafting idk man")
 
@@ -42,7 +42,7 @@ class itemListingsConfirmWidget(confirmWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.eventSubscribe("ITEMLISTTABLE_DATA_SELECTED", self.setSelectedItem)
+        self.eventSubscribe("ITEMLIST_ITEM_SELECTED", self.setSelectedItem)
         self.eventSubscribe("CLIENT_FREE", self.applyVisibility)
         self.setText("Something something about listings idk man")
 
@@ -72,7 +72,7 @@ class itemFlipConfirmWidget(confirmWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.eventSubscribe("ITEMLISTTABLE_DATA_SELECTED", self.setSelectedItem)
+        self.eventSubscribe("ITEMLIST_ITEM_SELECTED", self.setSelectedItem)
         self.eventSubscribe("CLIENT_FREE", self.applyVisibility)
         self.setText("Something something about flipping idk man")
 
@@ -98,3 +98,34 @@ class itemFlipConfirmWidget(confirmWidget):
 
         item = self.selectedItem
         self.eventPush("CLIENT_MBFLIP_REQUEST", item)
+
+
+class listListingsConfirmWidget(confirmWidget):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.eventSubscribe("LISTSLIST_LIST_SELECTED", self.setSelectedList)
+        self.eventSubscribe("CLIENT_FREE", self.applyVisibility)
+        self.setText("Something something about listings idk man")
+
+        self.applyVisibility()
+
+    selectedList = None
+
+    def setSelectedList(self, lst, *args):
+        self.selectedList = lst
+        self.applyVisibility()
+
+    def checkVisibility(self):
+        if self.selectedList is None:
+            return False
+        lst = self.selectedList
+        itemInfo = lst["ItemInfoCache"]
+        return itemInfo is None
+
+    def onClick(self, *args):
+        if self.selectedList is None:
+            return
+
+        lst = self.selectedList["ItemListCache"]
+        self.eventPush("CLIENT_MBINFO_REQUEST", lst)

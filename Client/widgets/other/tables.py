@@ -13,7 +13,7 @@ class itemInfoTable(pandaTable):
             **kwargs
         )
 
-        self.eventSubscribe("ITEMLISTTABLE_DATA_SELECTED", self.updateSelectedItem)
+        self.eventSubscribe("ITEMLIST_ITEM_SELECTED", self.updateSelectedItem)
 
     def updateSelectedItem(self, item, col):
         self.setData(item)
@@ -29,7 +29,7 @@ class itemCraftTable(pandaTable):
             **kwargs
         )
 
-        self.eventSubscribe("ITEMLISTTABLE_DATA_SELECTED", self.updateSelectedItem)
+        self.eventSubscribe("ITEMLIST_ITEM_SELECTED", self.updateSelectedItem)
         self.eventSubscribe("CLIENT_MBINFO_UPDATE", self.refresh)
 
     selectedItem = None
@@ -87,7 +87,7 @@ class itemlistingsTable(pandaTable):
             **kwargs
         )
 
-        self.eventSubscribe("ITEMLISTTABLE_DATA_SELECTED", self.updateSelectedItem)
+        self.eventSubscribe("ITEMLIST_ITEM_SELECTED", self.updateSelectedItem)
         self.eventSubscribe("CLIENT_MBINFO_UPDATE", self.refresh)
 
     selectedItem = None
@@ -131,7 +131,7 @@ class itemFlipTable(pandaTable):
             **kwargs
         )
 
-        self.eventSubscribe("ITEMLISTTABLE_DATA_SELECTED", self.updateSelectedItem)
+        self.eventSubscribe("ITEMLIST_ITEM_SELECTED", self.updateSelectedItem)
         self.eventSubscribe("CLIENT_MBINFO_UPDATE", self.refresh)
 
     selectedItem = None
@@ -167,4 +167,75 @@ class itemFlipTable(pandaTable):
                 "averagePriceNQ",
                 "averagePriceHQ",
             ],
+        )
+
+
+class listInfoTable(pandaTable):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            *args,
+            eventName="LISTINFOTABLE",
+            filterKey="NameKey",
+            horizontalHeader=True,
+            cellHeight=25,
+            iconApplicationCol=0,
+            iconDataCol="Icon",
+            multiSelect=True,
+            **kwargs
+        )
+
+        self.eventSubscribe("LISTSLIST_LIST_SELECTED", self.updateSelectedList)
+
+    def updateSelectedList(self, selected, col):
+        df = selected["ItemListCache"]
+        self.setData(df, cols=["Name", "ItemId", "Craftable", "CraftType"], base=True)
+
+
+class listListingsTable(pandaTable):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            *args,
+            eventName="LISTLISTINGSTABLE",
+            filterKey="NameKey",
+            horizontalHeader=True,
+            cellHeight=30,
+            iconApplicationCol=0,
+            iconDataCol="Icon",
+            **kwargs
+        )
+
+        self.eventSubscribe("LISTSLIST_LIST_SELECTED", self.updateSelectedList)
+        self.eventSubscribe("CLIENT_MBINFO_UPDATE", self.refresh)
+
+    selectedList = None
+
+    def updateSelectedList(self, lst, col):
+        self.selectedList = lst
+        self.refresh()
+
+    def refresh(self):
+        if self.selectedList is None:
+            self.setEmpty()
+            return
+
+        client = self.launcher.client
+        lst = self.selectedList
+        info = lst["ItemInfoCache"]
+
+        if info is None:
+            self.setEmpty()
+            return
+
+        self.setData(
+            info,
+            cols=[
+                "Name",
+                "averagePriceNQ",
+                "averagePriceHQ",
+                "minPriceNQ",
+                "minPriceHQ",
+                "nqSaleVelocity",
+                "hqSaleVelocity",
+            ],
+            base=True,
         )

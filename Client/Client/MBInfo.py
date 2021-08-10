@@ -1,10 +1,15 @@
 import pandas as pd
 import numpy as np
+import logging
+
+logger = logging.getLogger(__name__)
 
 # giving mbInfo these columns by default avoids errors when the first item
 # searched doesnt exist on market board as well as other things
 # need to keep updating this if more columns are added further down the line
 DEFAULT_COLUMNS = [
+    "Name",
+    "Quality",
     "averagePrice",
     "averagePriceHQ",
     "averagePriceNQ",
@@ -31,6 +36,7 @@ DEFAULT_COLUMNS = [
     "stackSizeHistogramHQ",
     "stackSizeHistogramNQ",
     "worldID",
+    "NameKey",
 ]
 
 
@@ -56,39 +62,102 @@ class MBInfo:
         return items, worlds
 
     def fetchMBInfo(self, items, worlds=None):
+
+        if type(items) == pd.DataFrame:
+            seriesList = []
+            for _, item in items.iterrows():
+                seriesList.append(item)
+            items = seriesList
+
         items, worlds = self.mbItemsWorldsPrepare(items, worlds)
         ids = [x["ItemId"] for x in items]
+        names = [x["Name"] for x in items]
+        icons = [x["Icon"] for x in items]
+        nameKey = [x["NameKey"] for x in items]
         index = [self.mbItemWorldKey(x, world) for x, world in zip(items, worlds)]
+        logger.debug(f"Fetching MB info for: {index}")
 
         d = self.gatherUniversalisQueries(zip(ids, worlds))
         d = pd.DataFrame(d, index=index)
 
-        # remove old entries if existing
-        # newIndices = set(d.index)
-        # existingIndices = set(self.mbInfo.index)
-        # removeIndices = newIndices.intersection(existingIndices)
-        # mbInfo = self.mbInfo.drop(removeIndices)
-        # self.mbInfo = mbInfo.append(d)
+        # add additional columns
+        d["Name"] = names
+        d["Icon"] = icons
+        d["NameKey"] = nameKey
 
+        ## Add seperate HQ and NQ
+        dhq, dnq = d.copy(), d.copy()
+        indexHQ = [
+            self.mbItemWorldKey(x, world, hq=True) for x, world in zip(items, worlds)
+        ]
+        indexNQ = [
+            self.mbItemWorldKey(x, world, hq=False) for x, world in zip(items, worlds)
+        ]
+        for col in d.columns:
+            if type(col) != str:
+                continue
+            if col.endswith("HQ"):
+                colBase = col.replace("HQ", "")
+                dhq[colBase] = d[col]
+            if col.endswith("NQ"):
+                colBase = col.replace("NQ", "")
+                dnq[colBase] = d[col]
+        dhq.index = indexHQ
+        dnq.index = indexNQ
+
+        # add quality thingy
+        d["Quality"] = "Any"
+        dhq["Quality"] = "HQ"
+        dnq["Quality"] = "NQ"
+
+        d = pd.concat([d, dhq, dnq])
         # better method, no old reference destroying
         self.mbInfo = self.mbInfo.combine_first(
             d
         )  # adds non-existing rows (updates nans too)
         self.mbInfo.update(d)  # updates all existing values from d into mbInfo
+        logger.debug(f"In fetchMBInfo: mbInfo now contains {len(d)} elements")
         self.eventPush("CLIENT_MBINFO_UPDATE")
 
-    def mbItemWorldKey(self, item, world=None):
+    def hqTag(self, hq):
+        if hq is None:
+            return ""
+        elif hq:
+            return "HQ"
+        else:
+            return "NQ"
+
+    def mbItemWorldKey(self, item, world=None, hq=None):
         if world is None:
             world = self.getPara("world")
 
-        if type(item) == int:
-            key = f"{item}__{world}"
-        else:
-            key = f'{item["ItemId"]}__{world}'
+        if type(item) != int:
+            item = item["ItemId"]
+
+        hqTag = self.hqTag(hq)
+
+        key = f"{item}{hqTag}__{world}"
 
         return key
 
-    def mbGetItemInfo(self, item, world=None, allWorlds=False):
+    def mbGetListInfo(
+        self, lst, world=None, allWorlds=False, hq=None, allQualities=False
+    ):
+        lstInfo = []
+        for index, item in lst.iterrows():
+            if not self.hasItemInfo(item):
+                return None
+            if allQualities:
+                lstInfo.append(self.mbGetItemInfo(item, hq=None))
+                lstInfo.append(self.mbGetItemInfo(item, hq=False))
+                lstInfo.append(self.mbGetItemInfo(item, hq=True))
+            else:
+                lstInfo.append(self.mbGetItemInfo(item, hq=hq))
+
+        df = pd.DataFrame(lstInfo)
+        return df
+
+    def mbGetItemInfo(self, item, world=None, allWorlds=False, hq=None):
 
         if allWorlds:
             if not self.hasItemInfo(item, allWorlds=True):
@@ -98,7 +167,7 @@ class MBInfo:
             cWorlds = self.getPara("connectedWorlds") + [self.getPara("world")]
             lst = []
             for world in cWorlds:
-                lst.append(self.mbGetItemInfo(item, world=world))
+                lst.append(self.mbGetItemInfo(item, world=world, hq=hq))
 
             return pd.DataFrame(lst, index=cWorlds)
 
@@ -107,6 +176,9 @@ class MBInfo:
         if self.hasItemInfo(item, world):
             return self.mbInfo.loc[key]
         else:
+            logger.error(
+                f"In mbGetItemInfo, hasItemInfo of {item['Name']} was None. Request sent to try to fix the problem."
+            )
             self.eventPush("CLIENT_MBINFO_REQUEST", item)
             return None
 

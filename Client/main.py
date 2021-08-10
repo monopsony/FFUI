@@ -7,11 +7,19 @@ from PyQt5.QtCore import (
     QTimer,
 )
 from widgets.itemList.itemList import itemList
+from widgets.listCreate.listCreate import listCreate
+from widgets.listsList.listsList import listsList
 from widgets.leftTabs.leftTabs import leftTabs
 from Client.Client import Client
 from Loader import Loader
 import sys, traceback, os
 from Events import EventClass
+import logging
+
+# import qtmodern.styles
+# import qtmodern.windows
+
+logger = logging.getLogger(__name__)
 
 
 class Launcher(EventClass):
@@ -29,25 +37,36 @@ class Launcher(EventClass):
         # CREATE ITEM LIST
         ilwidget = itemList(self)
         self.uiElements["itemList"] = ilwidget
-        # self.uiElements["itemList"].show()
 
-        # ATTACH ITEM/LIST LIST TO LEFT TABS
-        ltwidget.items_tab = ilwidget
+        ltwidget.itemsTab = ilwidget
         ltwidget.tabWidget.addTab(ilwidget, "Items")
 
-        listsTab = QtWidgets.QWidget()
-        listsTab.setObjectName("lists_tab")
-        ltwidget.tabWidget.addTab(listsTab, "Lists")
+        # CREATE LIST LIST
+        llwidget = listsList(self)
+        self.uiElements["listsList"] = llwidget
+
+        ltwidget.listsListTab = llwidget
+        ltwidget.tabWidget.addTab(llwidget, "Lists")
+
+        # CREATE CREATE LIST
+        clwidget = listCreate(self)
+        self.uiElements["listCreate"] = clwidget
+
+        ltwidget.createListsTab = clwidget
+        ltwidget.tabWidget.addTab(clwidget, "Create List")
 
         self.uiElements["leftTabs"].show()
 
     def launch(self):
 
         app = QtWidgets.QApplication(sys.argv)
-        style = open("stylesheet.qss").read()
+        style = open("stylesheet_bkp.qss").read()
+        app.setStyle("Fusion")
         app.setStyleSheet(style)
 
         self.app = app
+        # print(dir(qtmodern.styles))
+        # qtmodern.styles.light(app)
         self.initUi()
 
         self.clientThread = QThread()
@@ -69,7 +88,7 @@ class Launcher(EventClass):
         # SET TIMER FOR EVENT LOOP
         timer = QtCore.QTimer()
         timer.timeout.connect(self.eventHandle)
-        timer.setInterval(0.1 * 1000)  # milliseconds
+        timer.setInterval(int(0.1 * 1000))  # milliseconds
         timer.start()
 
         # SEND INITIALIZATION PROCEDURE FOR THINGS THAT NEED TO BE DONE IN THEIR OWN THREADS
@@ -82,10 +101,10 @@ class Launcher(EventClass):
         self.closeThreads()
 
     def ping(self):
-        print("ping")
+        logger.info("ping")
 
     def closeThreads(self):
-        print("Terminated threads")
+        logger.info("Terminated threads")
         self.clientThread.terminate()
         self.loaderThread.terminate()
         sys.exit(0)
@@ -97,5 +116,10 @@ class Launcher(EventClass):
 
 if __name__ == "__main__":
 
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="[%(levelname)s] %(message)s",
+        handlers=[logging.FileHandler("debug.log"), logging.StreamHandler()],
+    )
     launch = Launcher()
     launch.launch()

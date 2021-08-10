@@ -25,8 +25,8 @@ class TableModel(QtCore.QAbstractTableModel):
 
         if role == Qt.DecorationRole:
             value = self._icons.iloc[index.row()]
-            icon_id = self.launcher.client.getIconPath(value)
-            return QtGui.QIcon(icon_id)
+            iconId = self.launcher.client.getIconPath(value)
+            return QtGui.QIcon(iconId)
 
     def rowCount(self, index):
         return self._data.shape[0]

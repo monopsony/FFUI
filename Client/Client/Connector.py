@@ -1,5 +1,7 @@
 import aiohttp, asyncio
+import logging, time
 
+logger = logging.getLogger(__name__)
 UNIVERSALIS_BASE_URL = "https://universalis.app/api"
 
 
@@ -23,18 +25,32 @@ class Connector:
 
     async def query(self, query, raw=False):
         ret = None
+        retry = False
         async with aiohttp.ClientSession() as session:
             await self.semaphore.acquire()
             r = await session.get(query)
             if r.status == 200:
                 ret = await r.json()
+            elif r.status == 404:
+                logger.error(f"Status code 404 for query {query}. Skipping")
+            elif r.status == 429:
+                logger.warn(
+                    f"Status code 429 for query {query}. If this happens frequently, consider increasing sleep time or decreasing the number of semaphores."
+                )
+                retry = True
             else:
-                print(f"Status code {r.status} for query {query}. Skipping")
+                logger.error(f"Status code {r.status} for query {query}. Skipping")
 
             async with self.asyncioLock:
-                self.currentProgress += 1
+                if not retry:
+                    self.currentProgress += 1
 
             self.semaphore.release()
+
+        if retry:
+            await asyncio.sleep(5)
+            return await self.query(query, raw=raw)
+
         self.currentCallback()
         return ret
 
@@ -46,6 +62,8 @@ class Connector:
             t.append(asyncio.ensure_future(self.universalisQuery(world, item)))
 
         data = self.gatherTasks(t, callback=callback)
+        # Nones happen for 404 mostly (i.e. item has no page in universalis/is not sellable)
+        data = [x if x is not None else {} for x in data]
         return data
 
     def gatherDefaultCallback(self):

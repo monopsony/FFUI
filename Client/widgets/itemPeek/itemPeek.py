@@ -11,7 +11,7 @@ class itemPeek(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         super().__init__(*args, **kwargs)
 
         self.setupUi(self)
-        self.eventSubscribe("ITEMLISTTABLE_DATA_SELECTED", self.applyItem)
+        self.eventSubscribe("ITEMLIST_ITEM_SELECTED", self.applyItem)
 
     def applyItem(self, item, col):
         self.label.setText(item["Name"])

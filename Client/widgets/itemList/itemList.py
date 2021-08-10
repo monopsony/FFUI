@@ -19,6 +19,9 @@ from widgets.other.confirmWidgets import (
     itemListingsConfirmWidget,
     itemFlipConfirmWidget,
 )
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class itemList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
@@ -96,7 +99,7 @@ class itemList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         layout.addWidget(craftTable)
 
     def subscribeToEvents(self):
-        self.eventSubscribe("ITEMLIST_ITEM_CHANGED", self.applyItemSelection)
+        self.eventSubscribe("ITEMLISTTABLE_DATA_SELECTED", self.applyItemSelection)
         self.eventSubscribe("CLIENT_ITEMS_LAODED", self.displayItems)
 
     def displayItems(self):
@@ -104,43 +107,14 @@ class itemList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         items = self.launcher.client.items
         self.itemListTable.setData(items, cols=["Name"], base=True)
 
-    def setItems(self, items, filtered=False):
-        if not filtered:
-            self.model._baseData = items
+    # def itemSelectionChanged(self, itemSelection):
+    #     selectedItem = self.tableView.selectionModel().selectedRows()[0]
+    #     row = selectedItem.row()
+    #     cell = self.model.index(row, 0)
+    #     name = cell.data()
 
-        self.model._data = items["Name"]
-        self.model._icons = items["Icon"]
-        index0 = self.model.createIndex(0, 0)
-        index1 = self.model.createIndex(len(items), 0)
-        self.model.dataChanged.emit(index0, index1)
-        self.model.layoutChanged.emit()
+    #     self.eventPush("ITEMLIST_ITEM_CHANGED", name.lower())
 
-    # apply filters
-    def onChanged(self, text):
-
-        try:
-            re.compile(text)
-        except re.error:
-            return
-
-        filtered_items = self.model._baseData[
-            self.model._baseData["NameKey"].str.contains(text.lower())
-        ]
-        self.setItems(filtered_items, filtered=True)
-
-    def itemSelectionChanged(self, itemSelection):
-        selectedItem = self.tableView.selectionModel().selectedRows()[0]
-        row = selectedItem.row()
-        cell = self.model.index(row, 0)
-        name = cell.data()
-
-        self.eventPush("ITEMLIST_ITEM_CHANGED", name.lower())
-
-    def applyItemSelection(self, name):
-        print("applying item selection", name)
-        item = self.launcher.client.getItem(name=name)
-        if item is None:
-            self.eventPush("ITEMLIST_ITEM_DOESNT_EXIST", name)
-            return
-
-        self.eventPush("ITEMLIST_ITEM_SELECTED", item)
+    def applyItemSelection(self, item, *args):
+        logger.debug(f"applying item selection: {item['Name']} / {item['ItemId']}")
+        self.eventPush("ITEMLIST_ITEM_SELECTED", item, *args)

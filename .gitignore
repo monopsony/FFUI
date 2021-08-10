@@ -1,3 +1,8 @@
+# added stuff
+*_bkp.*
+Client/Lists/*
+Client/.qt_for_python/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

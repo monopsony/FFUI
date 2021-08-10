@@ -5,6 +5,9 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem, QPixmap, QIcon
 from Events import EventWidgetClass
 import re
 import pandas as pd
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class TableModel(QtCore.QAbstractTableModel):
@@ -39,8 +42,8 @@ class TableModel(QtCore.QAbstractTableModel):
             and (self.iconDataCol is not None)
         ):
             value = self._data[self.iconDataCol][row]
-            icon_id = self.launcher.client.getIconPath(value)
-            return QtGui.QIcon(icon_id)
+            iconId = self.launcher.client.getIconPath(value)
+            return QtGui.QIcon(iconId)
 
     def rowCount(self, index):
         if self.empty:
@@ -75,9 +78,11 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         verticalHeader=False,
         horizontalHeader=False,
         cellHeight=None,
+        cellWidth=None,
         iconApplicationCol=-1,
         iconDataCol=None,
-        **kwargs
+        multiSelect=False,
+        **kwargs,
     ):
         self.launcher = launcher
         super().__init__(*args, **kwargs)
@@ -94,8 +99,10 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         model.iconDataCol = iconDataCol
         model.parentPandaTable = self
 
-        # SET SINGLE SELECTION ONLY
-        self.tableView.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        if not multiSelect:
+            # SET SINGLE SELECTION ONLY
+            self.tableView.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+
         self.tableView.selectionModel().selectionChanged.connect(
             self.itemSelectionChanged
         )
@@ -108,6 +115,13 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             )
             self.tableView.verticalHeader().setMinimumSectionSize(cellHeight)
             self.tableView.verticalHeader().setDefaultSectionSize(cellHeight)
+
+        if cellWidth is not None:
+            self.tableView.horizontalHeader().setSectionResizeMode(
+                QtWidgets.QHeaderView.Fixed
+            )
+            self.tableView.horizontalHeader().setMinimumSectionSize(cellWidth)
+            self.tableView.horizontalHeader().setDefaultSectionSize(cellWidth)
 
         self.tableView.horizontalHeader().setSectionResizeMode(
             QtWidgets.QHeaderView.Stretch
@@ -132,6 +146,12 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
 
     # apply filters
     def applyFilter(self, text):
+        if text is None:
+            text = self.filterEdit.text()
+            logger.debug(
+                f"No text was given to pandatable {type(self)}, found `{text}` instead"
+            )
+
         if (self.filterKey is None) or len(self.model._baseData) == 0:
             return
 
