@@ -265,6 +265,7 @@ class Ui_Form(object):
         self.horizontalLayout.setStretch(3, 1)
 
         self.retranslateUi(Form)
+        self.maxMasteryDD.setCurrentIndex(8)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):

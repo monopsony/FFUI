@@ -1,6 +1,6 @@
 # added stuff
 *_bkp.*
-Client/Lists/*
+Client/Lists/*.json
 Client/.qt_for_python/
 
 # Byte-compiled / optimized / DLL files

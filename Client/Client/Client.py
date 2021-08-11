@@ -13,7 +13,6 @@ from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
-RECIPES_FILE = "Recipe.csv"
 ITEMS_FILE = "Item.csv"
 ITEMS_COMBINED_FILE = "ItemsCombined.csv"
 LISTS_DIR = "Lists"
@@ -132,23 +131,6 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
         r.sort_values("Name", inplace=True, ignore_index=True)
 
         r.to_csv(ITEMS_COMBINED_FILE)
-
-    def loadRecipes(self):
-        if not os.path.exists(RECIPES_FILE):
-            logger.error(
-                f'No file found under {RECIPES_FILE}. Fetch them using "recipe update"'
-            )
-            return
-
-        r = pd.read_csv(RECIPES_FILE)
-        r = colsRemoveSpecialChars(r)
-        # r.insert(1, "NameKey", r["Name"].str.lower(), True)
-        # r = r[~(r["Name"].isnull())]
-
-        self.recipes = r
-        # self.recipes.sort_values("Name", inplace=True, ignore_index=True)
-        logger.info(f"Loaded a total of {len(self.recipes)} RECIPES")
-        self.eventPush("CLIENT_RECIPES_LAODED")
 
     def run(self):
         self.loadParas()

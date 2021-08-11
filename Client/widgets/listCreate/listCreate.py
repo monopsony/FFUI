@@ -205,6 +205,8 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
 
         ## RECIPES
         recipeFilters = []
+
+        # JOBS
         jobs = []
         for i, cb in enumerate(
             [
@@ -223,6 +225,15 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         if len(jobs) < 8:
             filters = [f"(CraftType == {i})" for i in jobs]
             recipeFilters.append(f'({" | ".join(filters)})')
+
+        # MASTERY
+        minMastery = float(self.minMasteryDD.currentText())
+        if minMastery > 0.0:
+            recipeFilters.append(f"(MasteryLevel >= {minMastery})")
+
+        maxMastery = float(self.maxMasteryDD.currentText())
+        if maxMastery < 8.0:
+            recipeFilters.append(f"(MasteryLevel <= {maxMastery})")
 
         return " & ".join(itemFilters), " & ".join(recipeFilters)
 

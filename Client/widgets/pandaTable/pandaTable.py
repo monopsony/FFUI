@@ -5,18 +5,19 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem, QPixmap, QIcon
 from Events import EventWidgetClass
 import re
 import pandas as pd
-import logging
+import logging, traceback
 
 logger = logging.getLogger(__name__)
 
 
 class TableModel(QtCore.QAbstractTableModel):
-    def __init__(self, launcher):
+    def __init__(self, launcher, parent):
         super(TableModel, self).__init__()
         data = pd.DataFrame([])
         self._data = pd.DataFrame([])
         self._baseData = data
         self.launcher = launcher
+        self.parent = parent
 
     iconApplicationCol = -1
     iconDataCol = None
@@ -32,7 +33,7 @@ class TableModel(QtCore.QAbstractTableModel):
                 a = self.columns[row]
                 return str(self._data[a])
             else:
-                value = self._data[self.columns[col]][row]
+                value = self._data[self.columns[col]].iloc[row]
                 return str(value)
             # return "yo"
 
@@ -66,6 +67,13 @@ class TableModel(QtCore.QAbstractTableModel):
                     section
                 ]
 
+    def sort(self, Ncol, order):
+        if len(self.columns) == 0:
+            return
+
+        col = self.columns[Ncol]
+        self.parent.setData(self._data, sort=col, sortOrder=order)
+
 
 class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
     def __init__(
@@ -82,6 +90,7 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         iconApplicationCol=-1,
         iconDataCol=None,
         multiSelect=False,
+        sortingEnabled=True,
         **kwargs,
     ):
         self.launcher = launcher
@@ -92,7 +101,7 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         self.eventName = eventName
 
         # setup model
-        model = TableModel(self.launcher)
+        model = TableModel(self.launcher, self)
         self.tableView.setModel(model)
         self.model = model
         model.iconApplicationCol = iconApplicationCol
@@ -106,6 +115,7 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         self.tableView.selectionModel().selectionChanged.connect(
             self.itemSelectionChanged
         )
+        self.tableView.setSortingEnabled(sortingEnabled)
 
         # STYLING
         self.tableView.verticalHeader().setVisible(verticalHeader)
@@ -166,8 +176,26 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         filteredData.reset_index(drop=True, inplace=True)
         self.setData(filteredData)
 
-    def setData(self, data, cols=None, base=False):
+    lastSortedCol = None
+    lastSortOrder = None
+
+    def setData(self, data, cols=None, base=False, sort=None, sortOrder=True):
         self.model.empty = False
+
+        if sort is None:
+            sort = self.lastSortedCol
+            sortOrder = self.lastSortOrder
+        else:
+            self.lastSortedCol = sort
+            self.lastSortOrder = sortOrder
+
+        if sort is not None:
+            try:
+                data = data.sort_values(sort, ascending=not sortOrder)
+            except Exception as e:
+                logger.error(f"Failed to sort by {sort}: {e}")
+                logger.error(f"{traceback.format_exc()}")
+
         isSeries = type(data) == pd.Series
         if cols is None:
             if len(self.model.columns) == 0:
