@@ -20,7 +20,7 @@ DEFAULT_COLUMNS = [
     "currentAveragePrice",
     "currentAveragePriceHQ",
     "currentAveragePriceNQ",
-    "hqSaleVelocity",
+    "salesPerDayHQ",
     "itemID",
     "lastUploadTime",
     "listings",
@@ -30,9 +30,9 @@ DEFAULT_COLUMNS = [
     "minPrice",
     "minPriceHQ",
     "minPriceNQ",
-    "nqSaleVelocity",
+    "salesPerDayNQ",
     "recentHistory",
-    "regularSaleVelocity",
+    "salesPerDay",
     "stackSizeHistogram",
     "stackSizeHistogramHQ",
     "stackSizeHistogramNQ",
@@ -62,7 +62,7 @@ class MBInfo:
 
         return items, worlds
 
-    def fetchMBInfo(self, items, worlds=None):
+    def fetchMBInfo(self, items, worlds=None, quiet=False):
         if type(items) == pd.DataFrame:
             seriesList = []
             for _, item in items.iterrows():
@@ -79,6 +79,16 @@ class MBInfo:
 
         d = self.gatherUniversalisQueries(zip(ids, worlds))
         d = pd.DataFrame(d, index=index)
+
+        # change name of some columns
+        d.rename(
+            columns={
+                "nqSaleVelocity": "salesPerDayNQ",
+                "hqSaleVelocity": "salesPerDayHQ",
+                "regularSaleVelocity": "salesPerDay",
+            },
+            inplace=True,
+        )
 
         # add additional columns
         d["Name"] = names
@@ -118,7 +128,8 @@ class MBInfo:
         )  # adds non-existing rows (updates nans too)
         self.mbInfo.update(d)  # updates all existing values from d into mbInfo
         logger.debug(f"In fetchMBInfo: mbInfo now contains {len(d)} elements")
-        self.eventPush("CLIENT_MBINFO_UPDATE")
+        if not quiet:
+            self.eventPush("CLIENT_MBINFO_UPDATE")
 
     def hqTag(self, hq):
         if hq is None:
@@ -192,7 +203,7 @@ class MBInfo:
         tup = self.mbItemWorldKey(item, world)
         return tup in self.mbInfo.index
 
-    def fetchMBInfoComps(self, items, world=None):
+    def fetchMBInfoComps(self, items, world=None, **kwargs):
         compsAll = self.getRecipeComp(items, asItem=True)
         compsAll += items
         compsNew = [x for x in compsAll if not self.hasItemInfo(x)]
@@ -201,9 +212,9 @@ class MBInfo:
             return
         compsNew, worlds = self.mbItemsWorldsPrepare(compsNew, world)
 
-        self.fetchMBInfo(compsNew, worlds)
+        self.fetchMBInfo(compsNew, worlds, **kwargs)
 
-    def fetchCraftPrice(self, items, world=None):
+    def fetchCraftPrice(self, items, world=None, **kwargs):
         if type(items) == pd.DataFrame:
             seriesList = []
             for _, item in items.iterrows():
@@ -212,7 +223,7 @@ class MBInfo:
 
         items, worlds = self.mbItemsWorldsPrepare(items, world)
 
-        self.fetchMBInfoComps(items, world=world)
+        self.fetchMBInfoComps(items, world=world, quiet=True, **kwargs)
         # self.mbGetCraftPrice(items)
 
         self.setProgress(
@@ -242,12 +253,18 @@ class MBInfo:
         )
         metrics = ACTIVE_METRICS["CRAFT"]
         for k, v in metrics.items():
+            self.setProgress(
+                currentProgress=0,
+                currentMax=0,
+                progressText=f"Calculating custom metric {k}",
+            )
             try:
                 self.mbInfo.loc[keys, k] = v(self.mbInfo.loc[keys])
+                logger.info(f"Successfully calculated metric: {k}")
             except Exception as e:
+                self.mbInfo.loc[keys, k] = np.nan
                 logger.error(f"Failed to compute metric {k}: {e}")
                 logger.error(f"{traceback.format_exc()}")
-            logger.info(f"Successfully calculated metric: {k}")
 
         self.eventPush("CLIENT_MBINFO_UPDATE")
 
@@ -315,7 +332,7 @@ class MBInfo:
                     allItems.append(x)
                     allWorlds.append(world)
 
-        self.fetchMBInfo(allItems, allWorlds)
+        self.fetchMBInfo(allItems, allWorlds, quiet=True)
 
         for item in items:
             minNQ, minHQ = np.inf, np.inf

@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(264, 551)
+        Form.resize(261, 553)
         self.verticalLayout = QtWidgets.QVBoxLayout(Form)
         self.verticalLayout.setObjectName("verticalLayout")
         self.filterEdit = QtWidgets.QLineEdit(Form)
@@ -26,6 +26,8 @@ class Ui_Form(object):
         font.setPointSize(13)
         self.tableView.setFont(font)
         self.tableView.setObjectName("tableView")
+        self.tableView.horizontalHeader().setMinimumSectionSize(30)
+        self.tableView.verticalHeader().setCascadingSectionResizes(False)
         self.tableView.verticalHeader().setDefaultSectionSize(45)
         self.tableView.verticalHeader().setMinimumSectionSize(42)
         self.verticalLayout.addWidget(self.tableView)

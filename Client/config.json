@@ -49,47 +49,101 @@
     "itemListingsTable": {
       "columnWidths": {
         "Name": 300,
-        "total": 898
+        "hq": 1000,
+        "pricePerUnit": 107,
+        "quantity": 78,
+        "retainerName": 172,
+        "total": 100
       }
     },
     "listCraftTable": {
       "columnWidths": {
         "Name": 300
+      },
+      "exa1": {
+        "columnWidths": {
+          "Name": 300,
+          "expectedCraftProfit": 130,
+          "expectedCraftProfitPerDay": 368
+        }
+      },
+      "exatest": {
+        "columnWidths": {
+          "Name": 300,
+          "Quality": 61,
+          "averagePrice": 188,
+          "expectedCraftProfit": 176,
+          "expectedCraftProfitPerDay": 273,
+          "hqSaleVelocity": 169,
+          "nqSaleVelocity": 201
+        }
+      },
+      "uru": {
+        "columnWidths": {
+          "Name": 300,
+          "expectedCraftProfitPerDay": 391
+        }
       }
     },
     "listInfoTable": {
+      "a": {
+        "columnWidths": {
+          "Name": 300
+        }
+      },
+      "chicken": {
+        "columnWidths": {
+          "CraftType": 798,
+          "Craftable": 1000,
+          "Name": 365
+        }
+      },
       "columnWidths": {
         "Name": 300
       },
       "exa1": {
         "columnWidths": {
-          "CraftType": 798,
-          "Craftable": 1000,
+          "CraftType": 756,
+          "Craftable": 114,
           "Name": 328
         }
       },
       "exa2": {
         "columnWidths": {
+          "CraftType": 798,
           "Name": 300
         }
       },
       "exarchic": {
         "columnWidths": {
+          "CraftType": 743,
+          "Craftable": 99,
           "Name": 349
+        }
+      },
+      "exatest": {
+        "columnWidths": {
+          "CraftType": 813,
+          "Name": 300
         }
       },
       "fasafa": {
         "columnWidths": {
+          "CraftType": 814,
+          "Craftable": 104,
           "Name": 300
         }
       },
       "rtrt": {
         "columnWidths": {
+          "CraftType": 813,
+          "Craftable": 105,
           "Name": 300
         }
       },
       "rubbersilver": {
         "columnWidths": {
+          "CraftType": 814,
           "ItemId": 80,
           "Name": 300
         }
@@ -103,16 +157,55 @@
         "columnWidths": {
           "Name": 300
         }
+      },
+      "test3324": {
+        "columnWidths": {
+          "Name": 300
+        }
+      },
+      "uru": {
+        "columnWidths": {
+          "CraftType": 784,
+          "Craftable": 85,
+          "Name": 426
+        }
+      },
+      "werwerwer": {
+        "columnWidths": {
+          "Name": 300
+        }
       }
     },
     "listItemListTable": {
       "columnWidths": {
+        "ItemId": 770,
         "Name": 300
       }
     },
     "listListingsTable": {
       "columnWidths": {
         "Name": 300
+      },
+      "exa1": {
+        "columnWidths": {
+          "Name": 300,
+          "averagePriceHQ": 1000,
+          "hqSaleVelocity": 498
+        }
+      },
+      "exatest": {
+        "columnWidths": {
+          "Name": 300,
+          "hqSaleVelocity": 498,
+          "salesPerDay": 798,
+          "salesPerDayHQ": 480,
+          "salesPerDayNQ": 118
+        }
+      },
+      "uru": {
+        "columnWidths": {
+          "Name": 300
+        }
       }
     },
     "listsListTable": {

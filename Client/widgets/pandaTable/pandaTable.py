@@ -107,7 +107,6 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         # parameters
         self.eventName = eventName
         self.configKey = configKey
-        print("SET CONFIG KEY TO", configKey)
 
         # setup model
         model = TableModel(self.launcher, self)
@@ -282,8 +281,6 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             colName = self.model.columns[i]
             if colName in conf:
                 self.tableView.setColumnWidth(i, conf[colName])
-
-        self.tableView.setColumnWidth(2, 1000)
 
     def applyConfig(self):
         self.applyConfigColumnWidths()

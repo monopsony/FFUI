@@ -30,6 +30,12 @@
        <pointsize>13</pointsize>
       </font>
      </property>
+     <attribute name="horizontalHeaderMinimumSectionSize">
+      <number>30</number>
+     </attribute>
+     <attribute name="verticalHeaderCascadingSectionResizes">
+      <bool>false</bool>
+     </attribute>
      <attribute name="verticalHeaderDefaultSectionSize">
       <number>45</number>
      </attribute>

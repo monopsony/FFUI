@@ -140,8 +140,6 @@ class Launcher(EventClass):
             d = d[x]
 
         d[path[-1]] = value
-        logger.debug(f'Changed config `{",".join(path)}` to {value}')
-        self.eventPush("CONFIG_CHANGED", path, value, oldValue)
 
     def ping(self):
         logger.info("ping")

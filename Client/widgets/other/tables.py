@@ -18,7 +18,7 @@ class itemInfoTable(pandaTable):
         self.eventSubscribe("ITEMLIST_ITEM_SELECTED", self.updateSelectedItem)
 
     def updateSelectedItem(self, item, col):
-        self.setData(item)
+        self.setData(item, base=True)
 
     def baseConfigPath(self):
         return ["tables", "itemInfoTable"]
@@ -64,9 +64,9 @@ class itemCraftTable(pandaTable):
             "currentAveragePrice",
             "currentAveragePriceNQ",
             "currentAveragePriceHQ",
-            "regularSaleVelocity",
-            "nqSaleVelocity",
-            "hqSaleVelocity",
+            "salesPerDay",
+            "salesPerDayNQ",
+            "salesPerDayHQ",
             "averagePrice",
             "averagePriceNQ",
             "averagePriceHQ",
@@ -127,6 +127,7 @@ class itemlistingsTable(pandaTable):
         self.setData(
             listings,
             cols=["quantity", "pricePerUnit", "hq", "retainerName", "total"],
+            base=True,
         )
 
     def baseConfigPath(self):
@@ -176,6 +177,7 @@ class itemFlipTable(pandaTable):
                 "averagePriceNQ",
                 "averagePriceHQ",
             ],
+            base=True,
         )
 
     def baseConfigPath(self):
@@ -237,7 +239,7 @@ class listListingsTable(genericListTable, pandaTable):
         )
 
         self.eventSubscribe("LISTSLIST_LIST_SELECTED", self.updateSelectedList)
-        self.eventSubscribe("CLIENT_MBINFO_UPDATE", self.refresh)
+        # self.eventSubscribe("CLIENT_MBINFO_UPDATE", self.refresh)
 
     listTableKey = "listListingsTable"
 
@@ -262,12 +264,10 @@ class listListingsTable(genericListTable, pandaTable):
             info,
             cols=[
                 "Name",
-                "averagePriceNQ",
-                "averagePriceHQ",
-                "minPriceNQ",
-                "minPriceHQ",
-                "nqSaleVelocity",
-                "hqSaleVelocity",
+                "Quality",
+                "averagePrice",
+                "minPrice",
+                "salesPerDay",
             ],
             base=True,
         )
@@ -287,7 +287,7 @@ class listCraftTable(genericListTable, pandaTable):
         )
 
         self.eventSubscribe("LISTSLIST_LIST_SELECTED", self.updateSelectedList)
-        self.eventSubscribe("CLIENT_MBINFO_UPDATE", self.refresh)
+        # self.eventSubscribe("CLIENT_MBINFO_UPDATE", self.refresh)
 
     listTableKey = "listCraftTable"
 
@@ -316,14 +316,12 @@ class listCraftTable(genericListTable, pandaTable):
             "Name",
             "Quality",
             "craftPrice",
-            "averagePriceNQ",
-            "averagePriceHQ",
-            "minPriceNQ",
-            "minPriceHQ",
-            "nqSaleVelocity",
-            "hqSaleVelocity",
+            "averagePrice",
+            "minPrice",
+            "salesPerDay",
         ]
         cols += list(ACTIVE_METRICS["CRAFT"].keys())
+
         self.setData(
             info,
             cols=cols,

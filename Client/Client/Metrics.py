@@ -9,7 +9,7 @@ class Metrics:
 
     @staticmethod
     def expectedCraftProfitPerDay(df):
-        return df["expectedCraftProfit"] * df["regularSaleVelocity"]
+        return df["expectedCraftProfit"] * df["salesPerDay"]
 
 
 ACTIVE_METRICS = {
