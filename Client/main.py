@@ -12,7 +12,7 @@ from widgets.listsList.listsList import listsList
 from widgets.leftTabs.leftTabs import leftTabs
 from Client.Client import Client
 from Loader import Loader
-import sys, traceback, os
+import sys, traceback, os, json
 from Events import EventClass
 import logging
 
@@ -59,6 +59,8 @@ class Launcher(EventClass):
 
     def launch(self):
 
+        self.loadConfigFile()
+
         app = QtWidgets.QApplication(sys.argv)
         style = open("stylesheet_bkp.qss").read()
         app.setStyle("Fusion")
@@ -70,7 +72,7 @@ class Launcher(EventClass):
         self.initUi()
 
         self.clientThread = QThread()
-        self.client = Client(self.uiElements)
+        self.client = Client(self.uiElements, self)
         self.client.moveToThread(self.clientThread)
 
         self.clientThread.started.connect(self.client.run)
@@ -98,7 +100,48 @@ class Launcher(EventClass):
         # EXECUTE MAIN LOOP
         app.exec_()
 
+        self.exit()
+
+    def exit(self):
         self.closeThreads()
+        self.saveConfigFile()
+
+        sys.exit(0)
+
+    def loadConfigFile(self):
+        with open("config.json", "r") as f:
+            p = json.load(f)
+
+        self.config = p
+
+    def saveConfigFile(self):
+        with open("config.json", "w") as f:
+            f.write(json.dumps(self.config, indent=2, sort_keys=True))
+
+    def getConfig(self, path):
+        if type(path) != list:
+            return self.config.get(path, None)
+        d = self.config
+        for x in path:
+            d = d.get(x, None)
+            if d is None:
+                return None
+
+        return d
+
+    def setConfig(self, path, value):
+        if type(path) != list:
+            path = [path]
+        oldValue = self.getConfig(path)
+        d = self.config
+        for x in path[:-1]:
+            if x not in d:
+                d[x] = {}
+            d = d[x]
+
+        d[path[-1]] = value
+        logger.debug(f'Changed config `{",".join(path)}` to {value}')
+        self.eventPush("CONFIG_CHANGED", path, value, oldValue)
 
     def ping(self):
         logger.info("ping")
@@ -107,7 +150,6 @@ class Launcher(EventClass):
         logger.info("Terminated threads")
         self.clientThread.terminate()
         self.loaderThread.terminate()
-        sys.exit(0)
 
     def waitForEvents(self):
         app.processEvents()  # Qt events

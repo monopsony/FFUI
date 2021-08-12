@@ -11,7 +11,7 @@ class Connector:
         self.eventSubscribe("CLIENT_INIT", self.initializeConnector)
 
     def initializeConnector(self):
-        nSemaphore = self.getPara("nSemaphores")
+        nSemaphore = self.getConfig("nSemaphores")
         self.asyncioEventLoop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.asyncioEventLoop)
         self.semaphore = asyncio.Semaphore(nSemaphore)
@@ -92,6 +92,3 @@ if __name__ == "__main__":
 
     a = c.gatherTasks(t, callback=c.printProgress)
     print("DONE", len(a))
-
-    # a = asyncio.run(c.universalis_query("Shiva", "5510"))
-    # print(a)

@@ -28,8 +28,7 @@ class listsList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             filterKey="Name",
             eventName="LISTSLISTTABLE",
             cellHeight=33,
-            # iconApplicationCol=0,
-            # iconDataCol="Icon",
+            configKey="listsListTable",
         )
         self.leftLayout.replaceWidget(self.listsListTablePlaceholder, listsListTable)
         self.listsListTable = listsListTable

@@ -1,0 +1,125 @@
+{
+  "connectedWorlds": [
+    "Lich",
+    "Odin",
+    "Phoenix",
+    "Zodiark",
+    "Twintania"
+  ],
+  "nSemaphores": 3,
+  "retainerBlacklist": [
+    "Territum",
+    "Teritum",
+    "Tarvi",
+    "Sharra",
+    "Sashalle",
+    "Sellshit",
+    "Sellgarbage",
+    "Sellcrap"
+  ],
+  "tables": {
+    "generic": {
+      "columnWidths": {
+        "CraftType": 608,
+        "Craftable": 1000,
+        "Name": 1053
+      }
+    },
+    "itemCraftTable": {
+      "columnWidths": {
+        "Name": 300
+      }
+    },
+    "itemFlipTable": {
+      "columnWidths": {
+        "Name": 300
+      }
+    },
+    "itemInfoTable": {
+      "columnWidths": {
+        "Name": 300,
+        "Unnamed: 0": 1115
+      }
+    },
+    "itemListTable": {
+      "columnWidths": {
+        "Name": 300
+      }
+    },
+    "itemListingsTable": {
+      "columnWidths": {
+        "Name": 300,
+        "total": 898
+      }
+    },
+    "listCraftTable": {
+      "columnWidths": {
+        "Name": 300
+      }
+    },
+    "listInfoTable": {
+      "columnWidths": {
+        "Name": 300
+      },
+      "exa1": {
+        "columnWidths": {
+          "CraftType": 798,
+          "Craftable": 1000,
+          "Name": 328
+        }
+      },
+      "exa2": {
+        "columnWidths": {
+          "Name": 300
+        }
+      },
+      "exarchic": {
+        "columnWidths": {
+          "Name": 349
+        }
+      },
+      "fasafa": {
+        "columnWidths": {
+          "Name": 300
+        }
+      },
+      "rtrt": {
+        "columnWidths": {
+          "Name": 300
+        }
+      },
+      "rubbersilver": {
+        "columnWidths": {
+          "ItemId": 80,
+          "Name": 300
+        }
+      },
+      "test1": {
+        "columnWidths": {
+          "Name": 300
+        }
+      },
+      "test2": {
+        "columnWidths": {
+          "Name": 300
+        }
+      }
+    },
+    "listItemListTable": {
+      "columnWidths": {
+        "Name": 300
+      }
+    },
+    "listListingsTable": {
+      "columnWidths": {
+        "Name": 300
+      }
+    },
+    "listsListTable": {
+      "columnWidths": {
+        "Name": 300
+      }
+    }
+  },
+  "world": "Shiva"
+}

@@ -40,6 +40,7 @@ class itemList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             cellHeight=33,
             iconApplicationCol=0,
             iconDataCol="Icon",
+            configKey="itemListTable",
         )
         self.leftLayout.replaceWidget(self.itemListTablePlaceholder, itemListTable)
         self.itemListTable = itemListTable

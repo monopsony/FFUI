@@ -56,7 +56,7 @@ class MBInfo:
             items = [items]
 
         if worlds is None:
-            worlds = [self.getPara("world")] * len(items)
+            worlds = [self.getConfig("world")] * len(items)
         elif type(worlds) != list:
             worlds = [worlds] * len(items)
 
@@ -130,7 +130,7 @@ class MBInfo:
 
     def mbItemWorldKey(self, item, world=None, hq=None):
         if world is None:
-            world = self.getPara("world")
+            world = self.getConfig("world")
 
         if type(item) != int:
             item = item["ItemId"]
@@ -165,7 +165,7 @@ class MBInfo:
                 self.eventPush("CLIENT_MBFLIP_REQUEST", item)
                 return None
 
-            cWorlds = self.getPara("connectedWorlds") + [self.getPara("world")]
+            cWorlds = self.getConfig("connectedWorlds") + [self.getConfig("world")]
             lst = []
             for world in cWorlds:
                 lst.append(self.mbGetItemInfo(item, world=world, hq=hq))
@@ -185,7 +185,7 @@ class MBInfo:
 
     def hasItemInfo(self, item, world=None, allWorlds=False):
         if allWorlds:
-            cWorlds = self.getPara("connectedWorlds")
+            cWorlds = self.getConfig("connectedWorlds")
             hasItem = [self.hasItemInfo(item, world=x) for x in cWorlds]
             return all(hasItem)
 
@@ -248,13 +248,12 @@ class MBInfo:
                 logger.error(f"Failed to compute metric {k}: {e}")
                 logger.error(f"{traceback.format_exc()}")
             logger.info(f"Successfully calculated metric: {k}")
-            # print(self.mbInfo[k])
 
         self.eventPush("CLIENT_MBINFO_UPDATE")
 
     def mbGetCraftPrice(self, item, world=None):
         if world is None:
-            world = self.getPara("world")
+            world = self.getConfig("world")
 
         key = self.mbItemWorldKey(item, world)
         if not np.isnan(self.mbInfo.loc[key, "craftPrice"]):
@@ -280,9 +279,9 @@ class MBInfo:
 
     def mbGetFlipPrice(self, item, world=None, hq=False):
         if world is None:
-            world = self.getPara("world")
+            world = self.getConfig("world")
 
-        cWorlds = self.getPara("connectedWorlds")
+        cWorlds = self.getConfig("connectedWorlds")
 
         if True:
             return None
@@ -307,7 +306,7 @@ class MBInfo:
 
         items, worlds = self.mbItemsWorldsPrepare(items, world)
 
-        cWorlds = self.getPara("connectedWorlds") + [self.getPara("world")]
+        cWorlds = self.getConfig("connectedWorlds") + [self.getConfig("world")]
 
         allItems, allWorlds = [], []
         for x in items:

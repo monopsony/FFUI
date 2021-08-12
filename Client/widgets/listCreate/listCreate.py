@@ -29,6 +29,7 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             iconApplicationCol=0,
             iconDataCol="Icon",
             multiSelect=True,
+            configKey="itemListTable",
         )
         self.leftLayout.replaceWidget(self.itemListTablePlaceholder, itemListTable)
         self.itemListTable = itemListTable
@@ -41,6 +42,7 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             cellHeight=33,
             iconApplicationCol=0,
             iconDataCol="Icon",
+            configKey="listItemListTable",
         )
         self.rightLayout.replaceWidget(self.listItemListPlaceholder, listItemListTable)
         self.listItemListPlaceholder.hide()

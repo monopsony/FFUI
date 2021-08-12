@@ -5,9 +5,15 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem, QPixmap, QIcon
 from Events import EventWidgetClass
 import re
 import pandas as pd
-import logging, traceback
+import logging, traceback, copy
 
 logger = logging.getLogger(__name__)
+
+BASE_PANDATABLE_CONFIG = {
+    "columnWidths": {
+        "Name": 300,
+    }
+}
 
 
 class TableModel(QtCore.QAbstractTableModel):
@@ -91,6 +97,7 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         iconDataCol=None,
         multiSelect=False,
         sortingEnabled=True,
+        configKey="generic",
         **kwargs,
     ):
         self.launcher = launcher
@@ -99,6 +106,8 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
 
         # parameters
         self.eventName = eventName
+        self.configKey = configKey
+        print("SET CONFIG KEY TO", configKey)
 
         # setup model
         model = TableModel(self.launcher, self)
@@ -133,10 +142,12 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             self.tableView.horizontalHeader().setMinimumSectionSize(cellWidth)
             self.tableView.horizontalHeader().setDefaultSectionSize(cellWidth)
 
-        self.tableView.horizontalHeader().setSectionResizeMode(
-            QtWidgets.QHeaderView.Stretch
-        )
+        # self.tableView.horizontalHeader().setSectionResizeMode(
+        #     QtWidgets.QHeaderView.Stretch
+        # )
         self.tableView.horizontalHeader().setVisible(horizontalHeader)
+        self.tableView.horizontalHeader().setStretchLastSection(True)
+        self.tableView.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignLeft)
         self.tableView.setIconSize(QSize(40, 40))
 
         # MAKE READ ONLY
@@ -150,6 +161,11 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             self.verticalLayout.removeWidget(self.filterEdit)
             self.filterEdit.deleteLater()
             self.filterEdit.widgetName = False
+
+        # connect other events
+        self.tableView.horizontalHeader().sectionResized.connect(self.onColumnResize)
+
+        self.applyConfig()
 
     eventName = None
     filterKey = None
@@ -219,6 +235,7 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
 
         if base:
             self.model._baseData = data
+            self.applyConfigColumnWidths()
 
     def itemSelectionChanged(self):
 
@@ -232,3 +249,45 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
     def setEmpty(self):
         self.model.empty = True
         self.model.layoutChanged.emit()
+
+    # this method should be replaced for specific implementations of the panda table
+    def baseConfigPath(self):
+        if self.configKey == "generic":
+            logger.critical(
+                f"Generic table config used, please use a configKey kwarg or replace the baseConfigPath method. Culprit is: {type(self)}"
+            )
+            raise ValueError("Generic table config used")
+        return ["tables", self.configKey]
+
+    def setConfig(self, path, value):
+        if type(path) != list:
+            path = [path]
+
+        return self.launcher.setConfig(self.baseConfigPath() + path, value)
+
+    def getConfig(self, path):
+        basePath = self.baseConfigPath()
+        if self.launcher.getConfig(basePath) is None:
+            self.launcher.setConfig(basePath, copy.deepcopy(BASE_PANDATABLE_CONFIG))
+
+        if type(path) != list:
+            path = [path]
+
+        return self.launcher.getConfig(self.baseConfigPath() + path)
+
+    def applyConfigColumnWidths(self):
+        conf = self.getConfig("columnWidths")
+
+        for i in range(len(self.model.columns)):
+            colName = self.model.columns[i]
+            if colName in conf:
+                self.tableView.setColumnWidth(i, conf[colName])
+
+        self.tableView.setColumnWidth(2, 1000)
+
+    def applyConfig(self):
+        self.applyConfigColumnWidths()
+
+    def onColumnResize(self, colIndex, oldSize, newSize):
+        col = self.model.columns[colIndex]
+        self.setConfig(["columnWidths", col], newSize)

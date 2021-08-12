@@ -12,13 +12,16 @@ class itemInfoTable(pandaTable):
             eventName="ITEMINFOTABLE",
             verticalHeader=True,
             cellHeight=25,
-            **kwargs
+            **kwargs,
         )
 
         self.eventSubscribe("ITEMLIST_ITEM_SELECTED", self.updateSelectedItem)
 
     def updateSelectedItem(self, item, col):
         self.setData(item)
+
+    def baseConfigPath(self):
+        return ["tables", "itemInfoTable"]
 
 
 class itemCraftTable(pandaTable):
@@ -28,7 +31,7 @@ class itemCraftTable(pandaTable):
             eventName="ITEMCRAFTTABLE",
             verticalHeader=True,
             cellHeight=25,
-            **kwargs
+            **kwargs,
         )
 
         self.eventSubscribe("ITEMLIST_ITEM_SELECTED", self.updateSelectedItem)
@@ -80,6 +83,9 @@ class itemCraftTable(pandaTable):
             cols=cols,
         )
 
+    def baseConfigPath(self):
+        return ["tables", "itemCraftTable"]
+
 
 class itemlistingsTable(pandaTable):
     def __init__(self, *args, **kwargs):
@@ -88,7 +94,7 @@ class itemlistingsTable(pandaTable):
             eventName="ITEMLISTINGSTABLE",
             horizontalHeader=True,
             cellHeight=25,
-            **kwargs
+            **kwargs,
         )
 
         self.eventSubscribe("ITEMLIST_ITEM_SELECTED", self.updateSelectedItem)
@@ -123,6 +129,9 @@ class itemlistingsTable(pandaTable):
             cols=["quantity", "pricePerUnit", "hq", "retainerName", "total"],
         )
 
+    def baseConfigPath(self):
+        return ["tables", "itemListingsTable"]
+
 
 class itemFlipTable(pandaTable):
     def __init__(self, *args, **kwargs):
@@ -132,7 +141,7 @@ class itemFlipTable(pandaTable):
             verticalHeader=True,
             horizontalHeader=True,
             cellHeight=25,
-            **kwargs
+            **kwargs,
         )
 
         self.eventSubscribe("ITEMLIST_ITEM_SELECTED", self.updateSelectedItem)
@@ -156,10 +165,6 @@ class itemFlipTable(pandaTable):
             return
 
         info = client.mbGetItemInfo(self.selectedItem, allWorlds=True)
-        print(info)
-        # if np.isnan(info["flipPrice"]):
-        #     self.setEmpty()
-        #     return
 
         self.setData(
             info,
@@ -173,8 +178,28 @@ class itemFlipTable(pandaTable):
             ],
         )
 
+    def baseConfigPath(self):
+        return ["tables", "itemFlipTable"]
 
-class listInfoTable(pandaTable):
+
+class genericListTable:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    listTableKey = "genericListTable"
+    selectedList = None
+
+    def baseConfigPath(self):
+        if self.listTableKey == "genericListTable":
+            logger.warn(
+                f"In genericListTable: default listTableKey used. This should not be the case. Culprit: {type(self)}"
+            )
+        if self.selectedList is None:
+            return ["tables", self.listTableKey]
+        return ["tables", self.listTableKey, self.selectedList["Name"]]
+
+
+class listInfoTable(genericListTable, pandaTable):
     def __init__(self, *args, **kwargs):
         super().__init__(
             *args,
@@ -185,17 +210,20 @@ class listInfoTable(pandaTable):
             iconApplicationCol=0,
             iconDataCol="Icon",
             multiSelect=True,
-            **kwargs
+            **kwargs,
         )
 
         self.eventSubscribe("LISTSLIST_LIST_SELECTED", self.updateSelectedList)
 
+    listTableKey = "listInfoTable"
+
     def updateSelectedList(self, selected, col):
+        self.selectedList = selected
         df = selected["ItemListCache"]
         self.setData(df, cols=["Name", "ItemId", "Craftable", "CraftType"], base=True)
 
 
-class listListingsTable(pandaTable):
+class listListingsTable(genericListTable, pandaTable):
     def __init__(self, *args, **kwargs):
         super().__init__(
             *args,
@@ -205,13 +233,13 @@ class listListingsTable(pandaTable):
             cellHeight=30,
             iconApplicationCol=0,
             iconDataCol="Icon",
-            **kwargs
+            **kwargs,
         )
 
         self.eventSubscribe("LISTSLIST_LIST_SELECTED", self.updateSelectedList)
         self.eventSubscribe("CLIENT_MBINFO_UPDATE", self.refresh)
 
-    selectedList = None
+    listTableKey = "listListingsTable"
 
     def updateSelectedList(self, lst, col):
         self.selectedList = lst
@@ -245,7 +273,7 @@ class listListingsTable(pandaTable):
         )
 
 
-class listCraftTable(pandaTable):
+class listCraftTable(genericListTable, pandaTable):
     def __init__(self, *args, **kwargs):
         super().__init__(
             *args,
@@ -255,13 +283,13 @@ class listCraftTable(pandaTable):
             cellHeight=30,
             iconApplicationCol=0,
             iconDataCol="Icon",
-            **kwargs
+            **kwargs,
         )
 
         self.eventSubscribe("LISTSLIST_LIST_SELECTED", self.updateSelectedList)
         self.eventSubscribe("CLIENT_MBINFO_UPDATE", self.refresh)
 
-    selectedList = None
+    listTableKey = "listCraftTable"
 
     def updateSelectedList(self, lst, col):
         self.selectedList = lst

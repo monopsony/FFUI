@@ -25,9 +25,10 @@ def colsRemoveSpecialChars(df):
 
 
 class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
-    def __init__(self, ui, *args, **kwargs):
+    def __init__(self, ui, launcher, *args, **kwargs):
 
         self.ui = ui
+        self.launcher = launcher
         super().__init__(*args, **kwargs)
         self.eventFree = "CLIENT_FREE"  # sends a CLIENT_FREE event whenever the client is done with something that occupied it
         self.eventBusy = "CLIENT_BUSY"
@@ -110,6 +111,7 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
         with open(path) as fil:
             data = json.load(fil)
         self.lists[name] = data
+        data["Name"] = name
 
         if not quiet:
             self.eventPush("CLIENT_LIST_LOADED", name, path)
@@ -163,7 +165,6 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
         r.to_csv(ITEMS_COMBINED_FILE)
 
     def run(self):
-        self.loadParas()
         self.loadDataCSV()
         self.loadRecipes()
         self.loadItems()
@@ -174,22 +175,11 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
             self.eventHandle()
 
     # PARAS
-    def loadParas(self):
-        with open("para.json", "r") as f:
-            p = json.load(f)
+    def getConfig(self, *args, **kwargs):
+        return self.launcher.getConfig(*args, **kwargs)
 
-        self.para = p
-
-    def getPara(self, key):
-        return self.para.get(key, None)
-
-    def setPara(self, key, value):
-        self.para[key] = value
-        self.eventPush("CLIENT_PARA_SET", key, value)
-
-    def saveParas(self):
-        with open("para.json", "w") as f:
-            f.write(json.dumps(self.para, indent=2, sort_keys=True))
+    def setConfig(self, *args, **kwargs):
+        return self.launcher.setConfig(*args, **kwargs)
 
     ## UTILS
     def getIconPath(self, iconId):
