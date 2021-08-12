@@ -2,6 +2,8 @@ from widgets.pandaTable.pandaTable import pandaTable
 import pandas as pd
 import numpy as np
 
+from Client.Metrics import ACTIVE_METRICS
+
 
 class itemInfoTable(pandaTable):
     def __init__(self, *args, **kwargs):
@@ -54,26 +56,28 @@ class itemCraftTable(pandaTable):
             self.setEmpty()
             return
 
+        cols = [
+            "craftPrice",
+            "currentAveragePrice",
+            "currentAveragePriceNQ",
+            "currentAveragePriceHQ",
+            "regularSaleVelocity",
+            "nqSaleVelocity",
+            "hqSaleVelocity",
+            "averagePrice",
+            "averagePriceNQ",
+            "averagePriceHQ",
+            "minPrice",
+            "minPriceNQ",
+            "minPriceHQ",
+            "maxPrice",
+            "maxPriceNQ",
+            "maxPriceHQ",
+        ]
+        cols += list(ACTIVE_METRICS["CRAFT"].keys())
         self.setData(
             info,
-            cols=[
-                "craftPrice",
-                "currentAveragePrice",
-                "currentAveragePriceNQ",
-                "currentAveragePriceHQ",
-                "regularSaleVelocity",
-                "nqSaleVelocity",
-                "hqSaleVelocity",
-                "averagePrice",
-                "averagePriceNQ",
-                "averagePriceHQ",
-                "minPrice",
-                "minPriceNQ",
-                "minPriceHQ",
-                "maxPrice",
-                "maxPriceNQ",
-                "maxPriceHQ",
-            ],
+            cols=cols,
         )
 
 
@@ -280,17 +284,20 @@ class listCraftTable(pandaTable):
             self.setEmpty()
             return
 
+        cols = [
+            "Name",
+            "Quality",
+            "craftPrice",
+            "averagePriceNQ",
+            "averagePriceHQ",
+            "minPriceNQ",
+            "minPriceHQ",
+            "nqSaleVelocity",
+            "hqSaleVelocity",
+        ]
+        cols += list(ACTIVE_METRICS["CRAFT"].keys())
         self.setData(
             info,
-            cols=[
-                "Name",
-                "craftPrice",
-                "averagePriceNQ",
-                "averagePriceHQ",
-                "minPriceNQ",
-                "minPriceHQ",
-                "nqSaleVelocity",
-                "hqSaleVelocity",
-            ],
+            cols=cols,
             base=True,
         )

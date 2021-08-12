@@ -8,7 +8,7 @@ from widgets.pandaTable.pandaTable import pandaTable
 from widgets.other.tables import listInfoTable, listListingsTable, listCraftTable
 from widgets.other.confirmWidgets import (
     listListingsConfirmWidget,
-    listListingsConfirmWidget,
+    listCraftConfirmWidget,
 )
 import logging
 
@@ -71,7 +71,7 @@ class listsList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
     def fillCraftTab(self):
         layout = self.craftLayout
 
-        confirm = listListingsConfirmWidget(self.launcher)
+        confirm = listCraftConfirmWidget(self.launcher)
         layout.addWidget(confirm)
 
         craftTable = listCraftTable(self.launcher)
@@ -109,7 +109,7 @@ class listsList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             lst["ItemListCache"] = df
 
         # update market board info (as a copy) - needs to be updated
-        info = client.mbGetListInfo(lst["ItemListCache"])
+        info = client.mbGetListInfo(lst["ItemListCache"], allQualities=True)
         lst["ItemInfoCache"] = info  # is None if not all item infos are present
 
         self.eventPush("LISTSLIST_LIST_SELECTED", lst, col)

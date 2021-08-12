@@ -1,5 +1,7 @@
 from collections import defaultdict
+import logging
 
+logger = logging.getLogger(__name__)
 subs = defaultdict(list)
 
 
@@ -15,6 +17,7 @@ class EventClass:
         subs[event].append((self, func))
 
     def eventPush(self, event, *args):
+        logger.debug(f"Event pushed: {event} by {type(self)}")
         for obj, func in subs[event]:
             obj.eventQueue.append((func, args))
 

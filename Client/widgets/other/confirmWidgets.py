@@ -131,7 +131,7 @@ class listListingsConfirmWidget(confirmWidget):
         self.eventPush("CLIENT_MBINFO_REQUEST", lst)
 
 
-class listListingsConfirmWidget(confirmWidget):
+class listCraftConfirmWidget(confirmWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

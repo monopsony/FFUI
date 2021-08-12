@@ -28,6 +28,7 @@ class Connector:
         retry = False
         async with aiohttp.ClientSession() as session:
             await self.semaphore.acquire()
+            self.setProgress(progressText=f"Querying {query}")
             r = await session.get(query)
             if r.status == 200:
                 ret = await r.json()
@@ -45,13 +46,17 @@ class Connector:
                 if not retry:
                     self.currentProgress += 1
 
-            self.semaphore.release()
+            if not retry:
+                self.semaphore.release()
 
         if retry:
+            self.setProgress(
+                progressText=f"Sleeping 5s to wait for Universalis servers"
+            )
             await asyncio.sleep(5)
+            self.semaphore.release()
             return await self.query(query, raw=raw)
 
-        self.currentCallback()
         return ret
 
     def gatherUniversalisQueries(self, lst, callback=None):
@@ -66,25 +71,13 @@ class Connector:
         data = [x if x is not None else {} for x in data]
         return data
 
-    def gatherDefaultCallback(self):
-        self.eventPush("CLIENT_PROGRESS", self.currentProgress, self.currentMax)
-
-    def printProgress(self):
-        print(f"{self.currentProgress}/{self.currentMax}")
-
-    progressText = None
-    currentMax = 0
-    currentProgress = 0
-
     def gatherTasks(self, tasks, callback=None):
-        self.currentProgress = 0
-        self.currentMax = len(tasks)
-        self.progressText = "Gathering data"
-
-        if callback is None:
-            self.currentCallback = self.gatherDefaultCallback
-        else:
-            self.currentCallback = callback
+        # self.currentProgress = 0
+        # self.currentMax = len(tasks)
+        # self.progressText = "Gathering data"
+        self.setProgress(
+            currentProgress=0, currentMax=len(tasks), progressText=f"Gatering data"
+        )
 
         a = asyncio.get_event_loop().run_until_complete(asyncio.gather(*tasks))
         return a

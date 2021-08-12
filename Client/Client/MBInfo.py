@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
-import logging
+import logging, traceback
+from .Metrics import ACTIVE_METRICS
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +63,6 @@ class MBInfo:
         return items, worlds
 
     def fetchMBInfo(self, items, worlds=None):
-
         if type(items) == pd.DataFrame:
             seriesList = []
             for _, item in items.iterrows():
@@ -111,6 +111,7 @@ class MBInfo:
         dnq["Quality"] = "NQ"
 
         d = pd.concat([d, dhq, dnq])
+
         # better method, no old reference destroying
         self.mbInfo = self.mbInfo.combine_first(
             d
@@ -171,7 +172,7 @@ class MBInfo:
 
             return pd.DataFrame(lst, index=cWorlds)
 
-        key = self.mbItemWorldKey(item, world)
+        key = self.mbItemWorldKey(item, world, hq=hq)
 
         if self.hasItemInfo(item, world):
             return self.mbInfo.loc[key]
@@ -214,14 +215,40 @@ class MBInfo:
         self.fetchMBInfoComps(items, world=world)
         # self.mbGetCraftPrice(items)
 
+        self.setProgress(
+            currentProgress=0,
+            currentMax=len(items),
+            progressText=f"Calculating craft price",
+        )
         for item in items:
-            key = self.mbItemWorldKey(item, world)
-            # info = self.mbGetItemInfo(item)
-            # info.loc["minPrice"] = 100
-            if np.isnan(self.mbInfo.loc[key, "craftPrice"]):
-                self.mbInfo.loc[key, "craftPrice"] = self.mbGetCraftPrice(
-                    item, world=world
-                )
+            for hq in [None, True, False]:
+                key = self.mbItemWorldKey(item, world, hq)
+                if np.isnan(self.mbInfo.loc[key, "craftPrice"]):
+                    self.mbInfo.loc[key, "craftPrice"] = self.mbGetCraftPrice(
+                        item, world=world
+                    )
+            self.currentProgress += 1
+            self.setProgress()
+
+        keys = [self.mbItemWorldKey(item, world, None) for item in items]
+        keys += [self.mbItemWorldKey(item, world, True) for item in items]
+        keys += [self.mbItemWorldKey(item, world, False) for item in items]
+
+        # custom metrics
+        self.setProgress(
+            currentProgress=0,
+            currentMax=0,
+            progressText=f"Calculating custom craft metrics",
+        )
+        metrics = ACTIVE_METRICS["CRAFT"]
+        for k, v in metrics.items():
+            try:
+                self.mbInfo.loc[keys, k] = v(self.mbInfo.loc[keys])
+            except Exception as e:
+                logger.error(f"Failed to compute metric {k}: {e}")
+                logger.error(f"{traceback.format_exc()}")
+            logger.info(f"Successfully calculated metric: {k}")
+            # print(self.mbInfo[k])
 
         self.eventPush("CLIENT_MBINFO_UPDATE")
 

@@ -34,8 +34,38 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
 
         self.subscribeToEvents()
 
+        self.resetProgress()
+
+    progressText = ""
+    currentMax = 0
+    currentProgress = 0
+
+    def setProgress(self, progressText=None, currentMax=None, currentProgress=None):
+        if progressText is None:
+            progressText = self.progressText
+        else:
+            self.progressText = progressText
+
+        if currentMax is None:
+            currentMax = self.currentMax
+        else:
+            self.currentMax = currentMax
+
+        if currentProgress is None:
+            currentProgress = self.currentProgress
+        else:
+            self.currentProgress = currentProgress
+
+        self.eventPush("CLIENT_PROGRESS")
+
+    def resetProgress(self):
+        self.progressText = ""
+        self.currentMax = 0
+        self.currentProgress = 0
+
     def subscribeToEvents(self):
         self.eventSubscribe("NEW_LIST_SAVED", self.loadList)
+        self.eventSubscribe("CLIENT_FREE", self.resetProgress)
 
     def getItem(self, id=None, name=None):
         df = self.items
