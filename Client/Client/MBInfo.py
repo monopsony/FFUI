@@ -203,6 +203,12 @@ class MBInfo:
         self.fetchMBInfo(compsNew, worlds)
 
     def fetchCraftPrice(self, items, world=None):
+        if type(items) == pd.DataFrame:
+            seriesList = []
+            for _, item in items.iterrows():
+                seriesList.append(item)
+            items = seriesList
+
         items, worlds = self.mbItemsWorldsPrepare(items, world)
 
         self.fetchMBInfoComps(items, world=world)
@@ -266,6 +272,12 @@ class MBInfo:
         return craftPrice
 
     def fetchFlipPrice(self, items, world=None):
+        if type(items) == pd.DataFrame:
+            seriesList = []
+            for _, item in items.iterrows():
+                seriesList.append(item)
+            items = seriesList
+
         items, worlds = self.mbItemsWorldsPrepare(items, world)
 
         cWorlds = self.getPara("connectedWorlds") + [self.getPara("world")]

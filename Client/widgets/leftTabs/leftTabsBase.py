@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(1128, 789)
+        Form.resize(1700, 1000)
         self.verticalLayout = QtWidgets.QVBoxLayout(Form)
         self.verticalLayout.setObjectName("verticalLayout")
         self.tabWidget = QtWidgets.QTabWidget(Form)
@@ -23,7 +23,6 @@ class Ui_Form(object):
         self.clientHeaderPlaceholder = QtWidgets.QWidget(Form)
         self.clientHeaderPlaceholder.setObjectName("clientHeaderPlaceholder")
         self.verticalLayout.addWidget(self.clientHeaderPlaceholder)
-        self.verticalLayout.setStretch(0, 1)
 
         self.retranslateUi(Form)
         self.tabWidget.setCurrentIndex(-1)

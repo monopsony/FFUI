@@ -5,8 +5,11 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem, QPixmap, QIcon
 import pandas as pd
 from Events import EventWidgetClass
 from widgets.pandaTable.pandaTable import pandaTable
-from widgets.other.tables import listInfoTable, listListingsTable
-from widgets.other.confirmWidgets import listListingsConfirmWidget
+from widgets.other.tables import listInfoTable, listListingsTable, listCraftTable
+from widgets.other.confirmWidgets import (
+    listListingsConfirmWidget,
+    listListingsConfirmWidget,
+)
 import logging
 
 logger = logging.getLogger(__name__)
@@ -66,7 +69,13 @@ class listsList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         layout.addWidget(listingsTable)
 
     def fillCraftTab(self):
-        pass
+        layout = self.craftLayout
+
+        confirm = listListingsConfirmWidget(self.launcher)
+        layout.addWidget(confirm)
+
+        craftTable = listCraftTable(self.launcher)
+        layout.addWidget(craftTable)
 
     def fillFlipTab(self):
         pass

@@ -239,3 +239,58 @@ class listListingsTable(pandaTable):
             ],
             base=True,
         )
+
+
+class listCraftTable(pandaTable):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            *args,
+            eventName="LISTCRAFTTABLE",
+            filterKey="NameKey",
+            horizontalHeader=True,
+            cellHeight=30,
+            iconApplicationCol=0,
+            iconDataCol="Icon",
+            **kwargs
+        )
+
+        self.eventSubscribe("LISTSLIST_LIST_SELECTED", self.updateSelectedList)
+        self.eventSubscribe("CLIENT_MBINFO_UPDATE", self.refresh)
+
+    selectedList = None
+
+    def updateSelectedList(self, lst, col):
+        self.selectedList = lst
+        self.refresh()
+
+    def refresh(self):
+        if self.selectedList is None:
+            self.setEmpty()
+            return
+
+        client = self.launcher.client
+        lst = self.selectedList
+        info = lst["ItemInfoCache"]
+
+        if info is None:
+            self.setEmpty()
+            return
+
+        if info["craftPrice"].isna().values.any():
+            self.setEmpty()
+            return
+
+        self.setData(
+            info,
+            cols=[
+                "Name",
+                "craftPrice",
+                "averagePriceNQ",
+                "averagePriceHQ",
+                "minPriceNQ",
+                "minPriceHQ",
+                "nqSaleVelocity",
+                "hqSaleVelocity",
+            ],
+            base=True,
+        )
