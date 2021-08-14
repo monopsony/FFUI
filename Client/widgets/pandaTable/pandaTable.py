@@ -219,22 +219,28 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
 
         isSeries = type(data) == pd.Series
         if cols is None:
-            if len(self.model.columns) == 0:
+            if self.baseColumns is None:
                 if isSeries:
-                    cols = list(data.index)
+                    cols = [x for x in list(data.index) if not "Unnamed" in x]
                 else:
                     cols = data.columns
             else:
-                cols = self.model.columns
+                cols = self.baseColumns
 
         self.model.indexNames = data.index
 
         self.model.isSeries = isSeries
         self.model.columns = cols
 
+        if base:
+            self.baseColumns = cols
+            self.applyConfig()
+
         self.model._data = data
         index0 = self.model.createIndex(0, 0)
-        index1 = self.model.createIndex(len(data), (isSeries and 1) or len(cols))
+        index1 = self.model.createIndex(
+            len(data), (isSeries and 1) or len(self.model.columns)
+        )
         self.model.dataChanged.emit(index0, index1)
         self.model.layoutChanged.emit()
 
@@ -257,6 +263,8 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             sel = sel[0]
             row = self.model._data.iloc[sel.row()]
             self.eventPush(self.eventName + "_DATA_SELECTED", row, sel.column())
+
+    empty = False
 
     def setEmpty(self):
         self.model.empty = True
@@ -295,8 +303,28 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             if colName in conf:
                 self.tableView.setColumnWidth(i, conf[colName])
 
-    def applyConfig(self):
-        self.applyConfigColumnWidths()
+    baseColumns = None
+
+    def refresh(self):
+        if self.empty:
+            return
+        self.setData(self.model._baseData, base=True)
+
+    def applyConfig(self, refresh=False):
+        # self.applyConfigColumnWidths()
+        # is done by setData at the end
+
+        if self.baseColumns is None:
+            return
+
+        # hide columns
+        notShownColumns = []
+        for col in self.baseColumns:
+            isShown = self.getConfig(["columns", col, "shown"])
+            if (isShown is not None) and (isShown == False):
+                notShownColumns.append(col)
+
+        self.model.columns = [x for x in self.model.columns if x not in notShownColumns]
 
     def onColumnResize(self, colIndex, oldSize, newSize):
         col = self.model.columns[colIndex]

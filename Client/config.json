@@ -38,13 +38,671 @@
     },
     "itemInfoTable": {
       "columnWidths": {
+        "ItemId": 1115,
         "Name": 300,
         "Unnamed: 0": 1115
+      },
+      "columns": {
+        "AdditionalData": {
+          "decimalFormatting": "{}",
+          "shown": false,
+          "useK": false
+        },
+        "Adjective": {
+          "decimalFormatting": "{}",
+          "shown": false,
+          "useK": false
+        },
+        "AetherialReduce": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "AlwaysCollectable": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "AmountIngredient0": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "AmountIngredient1": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "AmountIngredient2": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "AmountIngredient3": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "AmountIngredient4": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "AmountIngredient5": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "AmountIngredient6": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "AmountIngredient7": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "AmountIngredient8": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "AmountIngredient9": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "AmountResult": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "Article": {
+          "decimalFormatting": "{}",
+          "shown": false,
+          "useK": false
+        },
+        "BaseParam0": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParam1": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParam2": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParam3": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParam4": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParam5": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamModifier": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamSpecial0": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamSpecial1": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamSpecial2": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamSpecial3": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamSpecial4": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamSpecial5": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamValue0": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamValue1": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamValue2": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamValue3": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamValue4": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamValue5": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamValueSpecial0": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamValueSpecial1": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamValueSpecial2": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamValueSpecial3": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamValueSpecial4": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BaseParamValueSpecial5": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "Block": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "BlockRate": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "CanBeHq": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "CanHq": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "CanQuickSynth": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ClassJobCategory": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ClassJobRepair": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ClassJobUse": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "Cooldown<s>": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "CraftType": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "Craftable": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "DamageMag": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "DamagePhys": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "DefenseMag": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "DefensePhys": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "Delay<ms>": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "Description": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "Desynth": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "DifficultyFactor": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "DurabilityFactor": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "EquipRestriction": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "EquipSlotCategory": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ExpRewarded": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "FilterGroup": {
+          "decimalFormatting": "{:.0f}",
+          "shown": false,
+          "useK": false
+        },
+        "GrandCompany": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "Icon": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "IsAdvancedMeldingPermitted": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "IsCollectable": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "IsCrestWorthy": {
+          "decimalFormatting": "{}",
+          "shown": false,
+          "useK": false
+        },
+        "IsDyeable": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "IsExpert": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "IsGlamourous": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "IsIndisposable": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "IsPvP": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "IsSecondary": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "IsSpecializationRequired": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "IsUnique": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "IsUntradable": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemAction": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemGlamour": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemId": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemId.1": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemIngredient0": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemIngredient1": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemIngredient2": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemIngredient3": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemIngredient4": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemIngredient5": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemIngredient6": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemIngredient7": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemIngredient8": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemIngredient9": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemRepair": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemRequired": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemResult": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemSearchCategory": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemSeries": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemSortCategory": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemSpecialBonus": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemSpecialBonusParam": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ItemUICategory": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "LevelEquip": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "LevelItem": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "Lot": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "MasteryLevel": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "MateriaSlotCount": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "MaterialQualityFactor": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "MaterializeType": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ModelMain": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "ModelSub": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "NameKey": {
+          "decimalFormatting": "{}",
+          "shown": false,
+          "useK": false
+        },
+        "Number": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "PatchNumber": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "Plural": {
+          "decimalFormatting": "{}",
+          "shown": false,
+          "useK": false
+        },
+        "PossessivePronoun": {
+          "decimalFormatting": "{}",
+          "shown": false,
+          "useK": false
+        },
+        "PriceLow": {
+          "decimalFormatting": "{}",
+          "shown": false,
+          "useK": false
+        },
+        "PriceMid": {
+          "decimalFormatting": "{}",
+          "shown": false,
+          "useK": false
+        },
+        "Pronoun": {
+          "decimalFormatting": "{}",
+          "shown": false,
+          "useK": false
+        },
+        "QualityFactor": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "QuickSynthControl": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "QuickSynthCraftsmanship": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "Rarity": {
+          "decimalFormatting": "{:.4f}",
+          "shown": true,
+          "useK": false
+        },
+        "RecipeLevelTable": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "RequiredControl": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "RequiredCraftsmanship": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "SecretRecipeBook": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "Singular": {
+          "decimalFormatting": "{}",
+          "shown": false,
+          "useK": false
+        },
+        "StackSize": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "StartsWithVowel": {
+          "decimalFormatting": "{}",
+          "shown": false,
+          "useK": false
+        },
+        "StatusRequired": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        }
       }
     },
     "itemListTable": {
       "columnWidths": {
-        "Name": 357
+        "Name": 247
       }
     },
     "itemListingsTable": {
@@ -159,7 +817,7 @@
       },
       "rubbersilver": {
         "columnWidths": {
-          "CraftType": 808,
+          "CraftType": 823,
           "ItemId": 80,
           "Name": 300
         }
@@ -181,9 +839,26 @@
       },
       "uru": {
         "columnWidths": {
-          "CraftType": 577,
+          "CraftType": 719,
           "Craftable": 85,
-          "Name": 426
+          "Name": 384
+        },
+        "columns": {
+          "CraftType": {
+            "decimalFormatting": "{}",
+            "shown": true,
+            "useK": false
+          },
+          "Craftable": {
+            "decimalFormatting": "{}",
+            "shown": true,
+            "useK": false
+          },
+          "ItemId": {
+            "decimalFormatting": "{}",
+            "shown": true,
+            "useK": false
+          }
         }
       },
       "werwerwer": {

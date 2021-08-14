@@ -58,10 +58,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="columnSettingsLabel">
-         <property name="text">
+        <widget class="QGroupBox" name="columnsGroup">
+         <property name="title">
           <string>Columns</string>
          </property>
+         <layout class="QVBoxLayout" name="columnsLayout"/>
         </widget>
        </item>
        <item>

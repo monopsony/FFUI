@@ -14,21 +14,58 @@ class configWindow(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
 
         self.setupUi(self)
 
+        self.applyButton.clicked.connect(self.applyConfig)
+
     isPopupWindow = True
 
+    pandaTable = None
+
+    colConfigs = []
+
     def applySettings(self, pandaTable):
+        self.pandaTable = pandaTable
         baseConfigPath = pandaTable.baseConfigPath()
         self.label.setText(f'Table config: `{".".join(baseConfigPath)}`')
 
-        cols = pandaTable.model.columns
-        layout = self.mainLayout
+        if (not hasattr(pandaTable, "baseColumns")) or (pandaTable.baseColumns is None):
+            return
 
+        cols = pandaTable.baseColumns
+        layout = self.columnsLayout
+
+        # delete old settings
+        if len(self.colConfigs) != 0:
+            for x in self.colConfigs:
+                x.deleteLater()
+
+        self.colConfigs = []
         for x in cols:
             if (x == "Name") or ("Unnamed" in x):
                 continue
 
-            layout.addWidget(columnConfig(self, pandaTable, x))
+            colConfig = columnConfig(self, pandaTable, x)
+            layout.addWidget(colConfig)
+            self.colConfigs.append(colConfig)
 
         self.show()
         getattr(self, "raise")()  # cant just self.raise cause raise is a keyword
         self.activateWindow()
+
+    def applyConfig(self):
+        d = self.getConfig()
+        for k in d.keys():
+            self.pandaTable.setConfig(k, d[k])
+
+        self.pandaTable.refresh()
+
+    def getConfig(self):
+        d = {"columns": {}}
+        # general settings
+
+        # columns
+        c = d["columns"]
+        for colConfig in self.colConfigs:
+            col = colConfig.columnName
+            c[col] = colConfig.getConfig()
+
+        return d

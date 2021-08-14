@@ -100,7 +100,6 @@ class itemList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         self.eventSubscribe("CLIENT_ITEMS_LAODED", self.displayItems)
 
     def displayItems(self):
-        print("DISPLAY ITEMS")
         self.setItems(self.launcher.client.items[["NameKey", "Name", "Icon"]])
 
     def setItems(self, items, filtered=False):

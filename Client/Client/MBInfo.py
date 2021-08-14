@@ -136,7 +136,6 @@ class MBInfo:
             )
             try:
                 d[k] = v(d)
-                print(v(d))
                 logger.info(f"Successfully calculated metric: {k}")
             except Exception as e:
                 d[k] = np.nan

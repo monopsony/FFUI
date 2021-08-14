@@ -138,7 +138,7 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
     def setCurrentList(self, lst, name=None):
         if type(lst) == dict:
             lst = lst["ItemIds"]
-        logger.debug(f"Setting current list to {name} ({len(lst)} items")
+        logger.debug(f"Setting current list to {name} ({len(lst)} items)")
 
         self.currentList = set(lst)
         if name is not None:
@@ -160,7 +160,6 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
 
         for row in rows:
             item = int(data.at[data.index[row], "ItemId"])
-            print(item)
             self.currentList.remove(item)
         self.eventPush("LISTCREATE_LIST_CHANGED")
 
