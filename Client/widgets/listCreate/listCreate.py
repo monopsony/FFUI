@@ -31,6 +31,7 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             iconDataCol="Icon",
             multiSelect=True,
             configKey="itemListTable",
+            hasConfig=False,
         )
         self.leftLayout.replaceWidget(self.itemListTablePlaceholder, itemListTable)
         self.itemListTable = itemListTable
@@ -45,6 +46,7 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             iconDataCol="Icon",
             multiSelect=True,
             configKey="listItemListTable",
+            hasConfig=False,
         )
         self.rightLayout.replaceWidget(self.listItemListPlaceholder, listItemListTable)
         self.listItemListPlaceholder.hide()
@@ -156,7 +158,6 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
 
         logger.debug(f"Removing {len(rows)} items from list")
 
-        print(self.currentList)
         for row in rows:
             item = int(data.at[data.index[row], "ItemId"])
             print(item)

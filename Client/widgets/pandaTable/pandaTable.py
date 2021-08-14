@@ -1,4 +1,5 @@
 from .pandaTableBase import Ui_Form
+from .configWindow import configWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QSortFilterProxyModel, Qt, QSize
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QPixmap, QIcon
@@ -98,6 +99,7 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         multiSelect=False,
         sortingEnabled=True,
         configKey="generic",
+        hasConfig=True,
         **kwargs,
     ):
         self.launcher = launcher
@@ -142,9 +144,6 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             self.tableView.horizontalHeader().setMinimumSectionSize(cellWidth)
             self.tableView.horizontalHeader().setDefaultSectionSize(cellWidth)
 
-        # self.tableView.horizontalHeader().setSectionResizeMode(
-        #     QtWidgets.QHeaderView.Stretch
-        # )
         self.tableView.horizontalHeader().setVisible(horizontalHeader)
         self.tableView.horizontalHeader().setStretchLastSection(True)
         self.tableView.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignLeft)
@@ -162,9 +161,15 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             self.filterEdit.deleteLater()
             self.filterEdit.widgetName = False
 
+        # setup config
+        if not hasConfig:
+            self.configButton.hide()
+
         # connect other events
         self.tableView.horizontalHeader().sectionResized.connect(self.onColumnResize)
+        self.configButton.clicked.connect(self.openConfig)
 
+        # apply configs
         self.applyConfig()
 
     eventName = None
@@ -296,3 +301,11 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
     def onColumnResize(self, colIndex, oldSize, newSize):
         col = self.model.columns[colIndex]
         self.setConfig(["columnWidths", col], newSize)
+
+    def openConfig(self):
+        if "pandaConfigWindow" not in self.launcher.uiElements:
+            self.launcher.uiElements["pandaConfigWindow"] = configWindow(self.launcher)
+            logger.debug("pandaConfigWindow created for the first time")
+
+        cw = self.launcher.uiElements["pandaConfigWindow"]
+        cw.applySettings(self)

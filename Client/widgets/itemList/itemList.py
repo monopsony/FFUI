@@ -11,7 +11,7 @@ from widgets.pandaTable.pandaTable import pandaTable
 from widgets.other.tables import (
     itemInfoTable,
     itemCraftTable,
-    itemlistingsTable,
+    itemListingsTable,
     itemFlipTable,
 )
 from widgets.other.confirmWidgets import (
@@ -41,6 +41,7 @@ class itemList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             iconApplicationCol=0,
             iconDataCol="Icon",
             configKey="itemListTable",
+            hasConfig=False,
         )
         self.leftLayout.replaceWidget(self.itemListTablePlaceholder, itemListTable)
         self.itemListTable = itemListTable
@@ -76,7 +77,7 @@ class itemList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         confirm = itemListingsConfirmWidget(self.launcher)
         layout.addWidget(confirm)
 
-        listingsTable = itemlistingsTable(self.launcher)
+        listingsTable = itemListingsTable(self.launcher)
         layout.addWidget(listingsTable)
 
     def fillCraftTab(self):

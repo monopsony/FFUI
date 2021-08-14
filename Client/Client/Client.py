@@ -57,7 +57,7 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
         else:
             self.currentProgress = currentProgress
 
-        self.eventPush("CLIENT_PROGRESS")
+        self.eventPush("CLIENT_PROGRESS", quiet=True)
 
     def resetProgress(self):
         self.progressText = ""

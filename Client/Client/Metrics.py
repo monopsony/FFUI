@@ -11,6 +11,10 @@ class Metrics:
     def expectedCraftProfitPerDay(df):
         return df["expectedCraftProfit"] * df["salesPerDay"]
 
+    @staticmethod
+    def bogusMetric(df):
+        return 1234
+
 
 ACTIVE_METRICS = {
     "INFO": {},

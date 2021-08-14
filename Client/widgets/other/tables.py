@@ -79,18 +79,19 @@ class itemCraftTable(pandaTable):
         ]
         cols += list(ACTIVE_METRICS["CRAFT"].keys())
         self.setData(
-            info, cols=cols,
+            info,
+            cols=cols,
         )
 
     def baseConfigPath(self):
         return ["tables", "itemCraftTable"]
 
 
-class itemlistingsTable(pandaTable):
+class itemListingsTable(pandaTable):
     def __init__(self, *args, **kwargs):
         super().__init__(
             *args,
-            eventName="ITEMLISTINGSTABLE",
+            eventName="itemListingsTable",
             horizontalHeader=True,
             cellHeight=25,
             **kwargs,
@@ -123,6 +124,7 @@ class itemlistingsTable(pandaTable):
             return
 
         listings = pd.DataFrame(listings)
+
         self.setData(
             listings,
             cols=["quantity", "pricePerUnit", "hq", "retainerName", "total"],
@@ -263,9 +265,18 @@ class listListingsTable(genericListTable, pandaTable):
             self.setEmpty()
             return
 
+        cols = [
+            "Name",
+            "Quality",
+            "averagePrice",
+            "minPrice",
+            "salesPerDay",
+        ]
+        cols += list(ACTIVE_METRICS["INFO"].keys())
+
         self.setData(
             info,
-            cols=["Name", "Quality", "averagePrice", "minPrice", "salesPerDay",],
+            cols=cols,
             base=True,
         )
 
@@ -320,6 +331,7 @@ class listCraftTable(genericListTable, pandaTable):
         cols += list(ACTIVE_METRICS["CRAFT"].keys())
 
         self.setData(
-            info, cols=cols, base=True,
+            info,
+            cols=cols,
+            base=True,
         )
-

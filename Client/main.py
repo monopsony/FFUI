@@ -106,7 +106,7 @@ class Launcher(EventClass):
         self.closeThreads()
         self.saveConfigFile()
 
-        sys.exit(0)
+        # sys.exit(0)
 
     def loadConfigFile(self):
         with open("config.json", "r") as f:

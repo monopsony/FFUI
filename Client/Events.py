@@ -16,8 +16,9 @@ class EventClass:
     def eventSubscribe(self, event, func):
         subs[event].append((self, func))
 
-    def eventPush(self, event, *args):
-        logger.debug(f"Event pushed: {event} by {type(self)}")
+    def eventPush(self, event, *args, quiet=False):
+        if not quiet:
+            logger.debug(f"Event pushed: {event} by {type(self)}")
         for obj, func in subs[event]:
             obj.eventQueue.append((func, args))
 
@@ -44,11 +45,11 @@ class EventClass:
 
 
 class EventWidgetClass:
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def eventSubscribe(self, *args):
         self.launcher.eventSubscribe(*args)
 
-    def eventPush(self, *args):
-        self.launcher.eventPush(*args)
+    def eventPush(self, *args, **kwargs):
+        self.launcher.eventPush(*args, **kwargs)

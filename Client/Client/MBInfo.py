@@ -38,7 +38,7 @@ DEFAULT_COLUMNS = [
     "stackSizeHistogramNQ",
     "worldID",
     "NameKey",
-]
+] + list(ACTIVE_METRICS["INFO"].keys())
 
 
 class MBInfo:
@@ -121,6 +121,27 @@ class MBInfo:
         dnq["Quality"] = "NQ"
 
         d = pd.concat([d, dhq, dnq])
+        # custom metrics
+        self.setProgress(
+            currentProgress=0,
+            currentMax=0,
+            progressText=f"Calculating custom info metrics",
+        )
+        metrics = ACTIVE_METRICS["INFO"]
+        for k, v in metrics.items():
+            self.setProgress(
+                currentProgress=0,
+                currentMax=0,
+                progressText=f"Calculating custom metric {k}",
+            )
+            try:
+                d[k] = v(d)
+                print(v(d))
+                logger.info(f"Successfully calculated metric: {k}")
+            except Exception as e:
+                d[k] = np.nan
+                logger.error(f"Failed to compute metric {k}: {e}")
+                logger.error(f"{traceback.format_exc()}")
 
         # better method, no old reference destroying
         self.mbInfo = self.mbInfo.combine_first(
