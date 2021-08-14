@@ -18,6 +18,7 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         super().__init__(*args, **kwargs)
         self.subscribeToEvents()
         self.setupUi(self)
+        self.launcher.uiElements["listCreate"] = self
 
         ## REPLACE PLACEHOLDER ITEM LIST TABLE
         # https://stackoverflow.com/questions/4625102/how-to-replace-a-widget-with-another-using-qt
@@ -42,11 +43,16 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             cellHeight=33,
             iconApplicationCol=0,
             iconDataCol="Icon",
+            multiSelect=True,
             configKey="listItemListTable",
         )
         self.rightLayout.replaceWidget(self.listItemListPlaceholder, listItemListTable)
         self.listItemListPlaceholder.hide()
         self.listItemListTable = listItemListTable
+
+        # self.listItemListTable.tableView.setSelectionBehavior(
+        #     QtWidgets.QTableView.SelectRows
+        # )
 
         self.connectAllButtons()
         self.applyValidators()
@@ -65,6 +71,9 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         self.saveButton.clicked.connect(self.saveCurrentList)
 
         self.craftableDD.currentIndexChanged.connect(self.craftableFilterChanged)
+
+        self.clearButton.clicked.connect(self.clearCurrentList)
+        self.removeSelectionButton.clicked.connect(self.removeSelection)
 
     def craftableFilterChanged(self, index=None):
         if index is None:
@@ -124,6 +133,36 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
 
     currentList = set()
 
+    def setCurrentList(self, lst, name=None):
+        if type(lst) == dict:
+            lst = lst["ItemIds"]
+        logger.debug(f"Setting current list to {name} ({len(lst)} items")
+
+        self.currentList = set(lst)
+        if name is not None:
+            self.saveNameEdit.setText(name)
+        self.eventPush("LISTCREATE_LIST_CHANGED")
+
+    def clearCurrentList(self):
+        logger.debug(f"Clearing current list")
+        self.currentList = set()
+        self.eventPush("LISTCREATE_LIST_CHANGED")
+
+    def removeSelection(self):
+        tv = self.listItemListTable.tableView
+        selectedIndices = tv.selectionModel().selectedIndexes()
+        rows = [x.row() for x in selectedIndices]
+        data = self.listItemListTable.model._data
+
+        logger.debug(f"Removing {len(rows)} items from list")
+
+        print(self.currentList)
+        for row in rows:
+            item = int(data.at[data.index[row], "ItemId"])
+            print(item)
+            self.currentList.remove(item)
+        self.eventPush("LISTCREATE_LIST_CHANGED")
+
     def addSelectedItems(self):
         logging.debug(f"Adding selected items")
         selectedIndices = self.itemListTable.tableView.selectionModel().selectedRows()
@@ -135,16 +174,19 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             item = int(data.at[data.index[row], "ItemId"])
             self.currentList.add(item)
 
-        self.eventPush("LISTCREATE_LIST_CHANGED", self.currentList)
+        self.eventPush("LISTCREATE_LIST_CHANGED")
 
     def addAllItems(self):
         logging.debug(f"Adding all items")
         data = self.itemListTable.model._data
 
         self.currentList.update(list(data["ItemId"]))
-        self.eventPush("LISTCREATE_LIST_CHANGED", self.currentList)
+        self.eventPush("LISTCREATE_LIST_CHANGED")
 
-    def applyListChanged(self, lst):
+    def applyListChanged(self):
+        lst = self.currentList
+        if self.currentList is None:
+            return
         df = self.launcher.client.items
         df = df[df["ItemId"].isin(lst)]
         df.reset_index(drop=True, inplace=True)

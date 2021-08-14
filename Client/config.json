@@ -27,7 +27,8 @@
     },
     "itemCraftTable": {
       "columnWidths": {
-        "Name": 300
+        "Name": 300,
+        "craftPrice": 957
       }
     },
     "itemFlipTable": {
@@ -53,7 +54,7 @@
         "pricePerUnit": 107,
         "quantity": 78,
         "retainerName": 172,
-        "total": 100
+        "total": 736
       }
     },
     "listCraftTable": {
@@ -64,7 +65,8 @@
         "columnWidths": {
           "Name": 300,
           "expectedCraftProfit": 130,
-          "expectedCraftProfitPerDay": 368
+          "expectedCraftProfitPerDay": 291,
+          "salesPerDay": 177
         }
       },
       "exatest": {
@@ -73,9 +75,10 @@
           "Quality": 61,
           "averagePrice": 188,
           "expectedCraftProfit": 176,
-          "expectedCraftProfitPerDay": 273,
+          "expectedCraftProfitPerDay": 177,
           "hqSaleVelocity": 169,
-          "nqSaleVelocity": 201
+          "nqSaleVelocity": 201,
+          "salesPerDay": 196
         }
       },
       "uru": {
@@ -86,6 +89,12 @@
       }
     },
     "listInfoTable": {
+      "123": {
+        "columnWidths": {
+          "CraftType": 798,
+          "Name": 300
+        }
+      },
       "a": {
         "columnWidths": {
           "Name": 300
@@ -165,7 +174,7 @@
       },
       "uru": {
         "columnWidths": {
-          "CraftType": 784,
+          "CraftType": 687,
           "Craftable": 85,
           "Name": 426
         }
@@ -190,7 +199,8 @@
         "columnWidths": {
           "Name": 300,
           "averagePriceHQ": 1000,
-          "hqSaleVelocity": 498
+          "hqSaleVelocity": 498,
+          "salesPerDay": 698
         }
       },
       "exatest": {

@@ -116,6 +116,7 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         model.iconDataCol = iconDataCol
         model.parentPandaTable = self
 
+        self.multiSelect = multiSelect
         if not multiSelect:
             # SET SINGLE SELECTION ONLY
             self.tableView.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
@@ -241,9 +242,16 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         if self.eventName is None:
             return
 
-        sel = self.tableView.selectedIndexes()[0]
-        row = self.model._data.iloc[sel.row()]
-        self.eventPush(self.eventName + "_DATA_SELECTED", row, sel.column())
+        if self.multiSelect:
+            return
+
+        sel = self.tableView.selectedIndexes()
+        if len(sel) == 0:
+            self.eventPush(self.eventName + "_DATA_SELECTED", None, None)
+        else:
+            sel = sel[0]
+            row = self.model._data.iloc[sel.row()]
+            self.eventPush(self.eventName + "_DATA_SELECTED", row, sel.column())
 
     def setEmpty(self):
         self.model.empty = True

@@ -112,9 +112,20 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
             data = json.load(fil)
         self.lists[name] = data
         data["Name"] = name
+        data["Path"] = path
 
         if not quiet:
             self.eventPush("CLIENT_LIST_LOADED", name, path)
+
+    def deleteList(self, lst):
+        if type(lst) == str:
+            lst = self.lists[lst]
+
+        logger.info(f'Deleting list: {lst["Name"]}')
+        os.remove(lst["Path"])
+        del self.lists[lst["Name"]]
+        self.eventPush("CLIENT_LISTS_LOADED")
+        self.eventPush("LISTSLIST_LIST_SELECTED", None, None)
 
     def loadDataCSV(self):
 

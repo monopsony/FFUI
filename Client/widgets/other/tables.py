@@ -79,8 +79,7 @@ class itemCraftTable(pandaTable):
         ]
         cols += list(ACTIVE_METRICS["CRAFT"].keys())
         self.setData(
-            info,
-            cols=cols,
+            info, cols=cols,
         )
 
     def baseConfigPath(self):
@@ -221,6 +220,10 @@ class listInfoTable(genericListTable, pandaTable):
 
     def updateSelectedList(self, selected, col):
         self.selectedList = selected
+        if selected is None:
+            self.setEmpty()
+            return
+
         df = selected["ItemListCache"]
         self.setData(df, cols=["Name", "ItemId", "Craftable", "CraftType"], base=True)
 
@@ -262,13 +265,7 @@ class listListingsTable(genericListTable, pandaTable):
 
         self.setData(
             info,
-            cols=[
-                "Name",
-                "Quality",
-                "averagePrice",
-                "minPrice",
-                "salesPerDay",
-            ],
+            cols=["Name", "Quality", "averagePrice", "minPrice", "salesPerDay",],
             base=True,
         )
 
@@ -323,7 +320,6 @@ class listCraftTable(genericListTable, pandaTable):
         cols += list(ACTIVE_METRICS["CRAFT"].keys())
 
         self.setData(
-            info,
-            cols=cols,
-            base=True,
+            info, cols=cols, base=True,
         )
+

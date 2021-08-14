@@ -5,6 +5,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem, QPixmap, QIcon
 import pandas as pd
 from Events import EventWidgetClass
 from widgets.pandaTable.pandaTable import pandaTable
+from widgets.listPeek.listPeek import listPeek
 from widgets.other.tables import listInfoTable, listListingsTable, listCraftTable
 from widgets.other.confirmWidgets import (
     listListingsConfirmWidget,
@@ -34,9 +35,9 @@ class listsList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         self.listsListTable = listsListTable
 
         ## REPLACE PLACEHOLDER lists PEEK
-        # peek = listsPeek(self.launcher)
-        # self.rightLayout.replaceWidget(self.listsPeekPlaceholder, peek)
-        # self.listsPeek = peek
+        peek = listPeek(self.launcher)
+        self.rightLayout.replaceWidget(self.listPeekPlaceholder, peek)
+        self.listPeek = peek
 
         # INFO
         self.fillInfoTab()
