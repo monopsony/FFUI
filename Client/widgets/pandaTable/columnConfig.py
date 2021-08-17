@@ -29,7 +29,8 @@ class columnConfig(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         self.columnNameLabel.setText(colName)
 
         # hide decimal thing if column not numeric
-        self.numeric = is_numeric_dtype(pandaTable.model._data[colName])
+        self.numeric = True  # is_numeric_dtype(pandaTable.model._data[colName])
+        # TODO is_numeric_dtype is not working properly for some reason idk
         if not self.numeric:
             self.decimalDD.hide()
             self.useKCB.hide()

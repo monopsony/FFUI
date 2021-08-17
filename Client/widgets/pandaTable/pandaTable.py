@@ -4,9 +4,12 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QSortFilterProxyModel, Qt, QSize
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QPixmap, QIcon
 from Events import EventWidgetClass
+from collections import defaultdict
+from numbers import Number
 import re
 import pandas as pd
 import logging, traceback, copy
+from pandas.api.types import is_numeric_dtype
 
 logger = logging.getLogger(__name__)
 
@@ -32,16 +35,34 @@ class TableModel(QtCore.QAbstractTableModel):
     indexNames = []
     isSeries = False
     empty = True
+    formatting = defaultdict(lambda: "{}")
+    useK = defaultdict(lambda: False)
 
     def data(self, index, role):
         row, col = index.row(), index.column()
         if role == Qt.DisplayRole:
             if self.isSeries:
-                a = self.columns[row]
-                return str(self._data[a])
+                colName = self.columns[row]
+                value = self._data[colName]
+                if isinstance(value, Number):
+                    form = self.formatting[colName]
+                    if self.useK[colName] and (value > 10000):
+                        value /= 1000
+                        form += "k"
+                else:
+                    form = "{}"
+                return form.format(value)
             else:
-                value = self._data[self.columns[col]].iloc[row]
-                return str(value)
+                colName = self.columns[col]
+                value = self._data[colName].iloc[row]
+                if isinstance(value, Number):
+                    form = self.formatting[colName]
+                    if self.useK[colName] and (value > 10000):
+                        value /= 1000
+                        form += "k"
+                else:
+                    form = "{}"
+                return form.format(value)
             # return "yo"
 
         if (
@@ -310,7 +331,7 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             return
         self.setData(self.model._baseData, base=True)
 
-    def applyConfig(self, refresh=False):
+    def applyConfig(self):
         # self.applyConfigColumnWidths()
         # is done by setData at the end
 
@@ -325,6 +346,14 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
                 notShownColumns.append(col)
 
         self.model.columns = [x for x in self.model.columns if x not in notShownColumns]
+
+        for col in self.model.columns:
+            form = "{}"
+            form = self.getConfig(["columns", col, "decimalFormatting"])
+            if form is not None:
+                self.model.formatting[col] = form
+
+            self.model.useK[col] = self.getConfig(["columns", col, "useK"])
 
     def onColumnResize(self, colIndex, oldSize, newSize):
         col = self.model.columns[colIndex]

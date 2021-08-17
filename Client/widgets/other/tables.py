@@ -78,10 +78,7 @@ class itemCraftTable(pandaTable):
             "maxPriceHQ",
         ]
         cols += list(ACTIVE_METRICS["CRAFT"].keys())
-        self.setData(
-            info,
-            cols=cols,
-        )
+        self.setData(info, cols=cols, base=True)
 
     def baseConfigPath(self):
         return ["tables", "itemCraftTable"]

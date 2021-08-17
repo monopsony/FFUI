@@ -28,7 +28,99 @@
     "itemCraftTable": {
       "columnWidths": {
         "Name": 300,
-        "craftPrice": 957
+        "craftPrice": 1135
+      },
+      "columns": {
+        "averagePrice": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "averagePriceHQ": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "averagePriceNQ": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "craftPrice": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "currentAveragePrice": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "currentAveragePriceHQ": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "currentAveragePriceNQ": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "expectedCraftProfit": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "expectedCraftProfitPerDay": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "maxPrice": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": true
+        },
+        "maxPriceHQ": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "maxPriceNQ": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "minPrice": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "minPriceHQ": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "minPriceNQ": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "salesPerDay": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "salesPerDayHQ": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "salesPerDayNQ": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        }
       }
     },
     "itemFlipTable": {
@@ -702,17 +794,44 @@
     },
     "itemListTable": {
       "columnWidths": {
-        "Name": 247
+        "Name": 254
       }
     },
     "itemListingsTable": {
       "columnWidths": {
         "Name": 300,
         "hq": 87,
-        "pricePerUnit": 107,
+        "pricePerUnit": 117,
         "quantity": 78,
         "retainerName": 172,
-        "total": 744
+        "total": 844
+      },
+      "columns": {
+        "hq": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "pricePerUnit": {
+          "decimalFormatting": "{:.1f}",
+          "shown": true,
+          "useK": true
+        },
+        "quantity": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "retainerName": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        },
+        "total": {
+          "decimalFormatting": "{}",
+          "shown": true,
+          "useK": false
+        }
       }
     },
     "listCraftTable": {
@@ -725,6 +844,14 @@
           "expectedCraftProfit": 130,
           "expectedCraftProfitPerDay": 291,
           "salesPerDay": 177
+        }
+      },
+      "exarchic": {
+        "columnWidths": {
+          "Name": 300,
+          "expectedCraftProfit": 176,
+          "expectedCraftProfitPerDay": 242,
+          "salesPerDay": 162
         }
       },
       "exatest": {
@@ -742,7 +869,8 @@
       "rubbersilver": {
         "columnWidths": {
           "Name": 300,
-          "expectedCraftProfitPerDay": 316,
+          "expectedCraftProfit": 166,
+          "expectedCraftProfitPerDay": 240,
           "salesPerDay": 182
         }
       },
@@ -790,7 +918,7 @@
       },
       "exarchic": {
         "columnWidths": {
-          "CraftType": 743,
+          "CraftType": 760,
           "Craftable": 99,
           "Name": 349
         }
@@ -817,9 +945,27 @@
       },
       "rubbersilver": {
         "columnWidths": {
-          "CraftType": 823,
+          "CraftType": 816,
+          "Craftable": 92,
           "ItemId": 80,
           "Name": 300
+        },
+        "columns": {
+          "CraftType": {
+            "decimalFormatting": "{}",
+            "shown": true,
+            "useK": false
+          },
+          "Craftable": {
+            "decimalFormatting": "{}",
+            "shown": true,
+            "useK": false
+          },
+          "ItemId": {
+            "decimalFormatting": "{}",
+            "shown": true,
+            "useK": false
+          }
         }
       },
       "test1": {
@@ -869,7 +1015,7 @@
     },
     "listItemListTable": {
       "columnWidths": {
-        "ItemId": 770,
+        "ItemId": 725,
         "Name": 300
       }
     },
@@ -885,6 +1031,12 @@
           "salesPerDay": 698
         }
       },
+      "exarchic": {
+        "columnWidths": {
+          "Name": 300,
+          "salesPerDay": 687
+        }
+      },
       "exatest": {
         "columnWidths": {
           "Name": 300,
@@ -898,7 +1050,29 @@
         "columnWidths": {
           "Name": 300,
           "bogus": 501,
-          "salesPerDay": 698
+          "salesPerDay": 688
+        },
+        "columns": {
+          "Quality": {
+            "decimalFormatting": "{}",
+            "shown": true,
+            "useK": false
+          },
+          "averagePrice": {
+            "decimalFormatting": "{}",
+            "shown": true,
+            "useK": false
+          },
+          "minPrice": {
+            "decimalFormatting": "{}",
+            "shown": true,
+            "useK": false
+          },
+          "salesPerDay": {
+            "decimalFormatting": "{}",
+            "shown": true,
+            "useK": false
+          }
         }
       },
       "uru": {
