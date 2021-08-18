@@ -70,7 +70,7 @@ class TableModel(QtCore.QAbstractTableModel):
             and (col == self.iconApplicationCol)
             and (self.iconDataCol is not None)
         ):
-            value = self._data[self.iconDataCol][row]
+            value = self._data[self.iconDataCol].iloc[row]
             iconId = self.launcher.client.getIconPath(value)
             return QtGui.QIcon(iconId)
 
