@@ -60,7 +60,18 @@ class MBInfo:
         elif type(worlds) != list:
             worlds = [worlds] * len(items)
 
-        return items, worlds
+        # remove duplicates
+        itemsUnique, worldsUnique = [], []
+        alreadySeen = []
+        for i in range(len(items)):
+            key = self.mbItemWorldKey(items[i], worlds[i])
+            if key in alreadySeen:
+                continue
+            alreadySeen.append(key)
+            itemsUnique.append(items[i])
+            worldsUnique.append(worlds[i])
+
+        return itemsUnique, worldsUnique
 
     def fetchMBInfo(self, items, worlds=None, quiet=False):
         if type(items) == pd.DataFrame:
@@ -293,6 +304,7 @@ class MBInfo:
             world = self.getConfig("world")
 
         key = self.mbItemWorldKey(item, world)
+        print(self.mbInfo.loc[key], key)
         if not np.isnan(self.mbInfo.loc[key, "craftPrice"]):
             return self.mbInfo.loc[key, "craftPrice"]
 

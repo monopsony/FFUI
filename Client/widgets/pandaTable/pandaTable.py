@@ -379,6 +379,8 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
 
     def applyConfigColumnWidths(self):
         conf = self.getConfig("columnWidths")
+        if conf is None:
+            return
 
         for i in range(len(self.model.columns)):
             colName = self.model.columns[i]

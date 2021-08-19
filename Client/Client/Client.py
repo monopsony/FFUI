@@ -116,6 +116,7 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
         self.lists[name] = data
         data["Name"] = name
         data["Path"] = path
+        data["ItemIds"] = list(set(data["ItemIds"]))
 
         if not quiet:
             self.eventPush("CLIENT_LIST_LOADED", name, path)
