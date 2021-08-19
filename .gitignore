@@ -2,7 +2,7 @@
 debug.log
 config.json
 *_bkp.*
-Client/Lists/*.json
+Client/Lists/*_.json
 Client/.qt_for_python/
 
 # Byte-compiled / optimized / DLL files

@@ -35,6 +35,7 @@ class Launcher(EventClass):
         super().__init__()
 
     uiElements = {}
+
     version = "1.0.0"
 
     def initUi(self):

@@ -97,6 +97,9 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
     lists = {}
 
     def loadLists(self):
+        if not os.path.exists("Lists"):
+            os.mkdir("Lists")
+
         for path in glob.glob(os.path.join("Lists", "*.json")):
             self.loadList(path, quiet=True)
 
