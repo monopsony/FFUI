@@ -60,8 +60,17 @@ class RecipeHandler:
         if type(item) == list:
             c = Counter()
 
+            self.setProgress(
+                currentProgress=0,
+                currentMax=len(item),
+                progressText=f"Gathering recipe components",
+            )
+
+            i = 0
             for x in item:
                 c += self.getRecipeComp(x, shallow=shallow)
+                self.setProgress(currentProgress=i)
+                i += 1
 
             if asItem:
                 return [self.getItem(id=x) for x in c]
@@ -86,6 +95,11 @@ class RecipeHandler:
 
             c[ingId] += ingAmount
             ingItem = self.getItem(id=ingId)
+            if ingItem is None:
+                logger.error(
+                    f"Found None item component while gathering comps, id: {ingId}"
+                )
+                continue
             ingRec = self.getRecipe(ingItem)
 
             if (ingRec is None) or shallow:

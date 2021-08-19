@@ -1,5 +1,6 @@
 import aiohttp, asyncio
 import logging, time
+import numpy as np
 
 logger = logging.getLogger(__name__)
 UNIVERSALIS_BASE_URL = "https://universalis.app/api"
@@ -53,7 +54,7 @@ class Connector:
             self.setProgress(
                 progressText=f"Sleeping 5s to wait for Universalis servers"
             )
-            await asyncio.sleep(5)
+            await asyncio.sleep(10)
             self.semaphore.release()
             return await self.query(query, raw=raw)
 
@@ -68,7 +69,17 @@ class Connector:
 
         data = self.gatherTasks(t, callback=callback)
         # Nones happen for 404 mostly (i.e. item has no page in universalis/is not sellable)
-        data = [x if x is not None else {} for x in data]
+        data = [
+            x
+            if x is not None
+            else {
+                "craftPrice": np.inf,
+                "flipPriceNQ": np.inf,
+                "flipPriceHQ": np.inf,
+                "minPrice": np.inf,
+            }
+            for x in data
+        ]
         return data
 
     def gatherTasks(self, tasks, callback=None):
@@ -79,7 +90,12 @@ class Connector:
             currentProgress=0, currentMax=len(tasks), progressText=f"Gatering data"
         )
 
+        t0 = time.time()
         a = asyncio.get_event_loop().run_until_complete(asyncio.gather(*tasks))
+        t = time.time() - t0
+        logger.info(
+            f"Finished gathering data, took {t//60:.0f} minutes {t%60:.0f} seconds"
+        )
         return a
 
 

@@ -125,6 +125,7 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         self.minEquipLevelEdit.setValidator(QtGui.QIntValidator(0, 99999))
         self.maxEquipLevelEdit.setValidator(QtGui.QIntValidator(0, 99999))
         self.minStackSizeEdit.setValidator(QtGui.QIntValidator(0, 999))
+        self.maxStackSizeEdit.setValidator(QtGui.QIntValidator(0, 999))
 
     def subscribeToEvents(self):
         self.eventSubscribe("CLIENT_ITEMS_LAODED", self.displayItems)
@@ -234,6 +235,11 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         minStackSize = self.minStackSizeEdit.text()
         if minStackSize != "":
             itemFilters.append(f"(StackSize >= {minStackSize})")
+
+        # Min Stack Size
+        maxStackSize = self.maxStackSizeEdit.text()
+        if maxStackSize != "":
+            itemFilters.append(f"(StackSize <= {maxStackSize})")
 
         # Glamourous
         glam = self.glamourousDD.currentIndex()

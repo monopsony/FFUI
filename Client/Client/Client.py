@@ -79,7 +79,7 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
             logger.warn(f"Get item called but no id or name given")
 
         if len(item) == 0:
-            return None
+            return pd.Series({"ItemId": id, "Name": name, "Prohibited": True})
         elif len(item) == 1:
             return item.iloc[0]
         else:
@@ -147,9 +147,7 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
 
     def createItemRecipeCombined(self):
         if not os.path.exists(ITEMS_FILE):
-            logger.error(
-                f'No file found under {ITEMS_FILE}. Fetch them using "item update"'
-            )
+            logger.error(f"No file found under {ITEMS_FILE}. Help.")
             return
 
         logger.info(
@@ -160,7 +158,13 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
         r = colsRemoveSpecialChars(r)
         r.insert(1, "NameKey", r["Name"].str.lower(), True)
         r = r[~(r["Name"].isnull())]
-        r = r[r["IsUntradable"] == False]
+        # r = r[r["IsUntradable"] == False]
+
+        self.setProgress(
+            progressText="Generating item-recipe list for the first time...",
+            currentMax=len(r),
+            currentProgress=0,
+        )
 
         # update with recipes
         updateList, updateIndices = [], []
@@ -172,6 +176,7 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
                 r.loc[index, ["Craftable"]] = True
                 updateList.append(rec)
                 updateIndices.append(index)
+            self.setProgress(currentProgress=index)
 
         updateDF = pd.DataFrame(updateList, index=updateIndices)
         r = pd.concat([r, updateDF], axis=1)
@@ -180,6 +185,7 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
         r.to_csv(ITEMS_COMBINED_FILE)
 
     def run(self):
+        self.busy = True
         self.loadDataCSV()
         self.loadRecipes()
         self.loadItems()

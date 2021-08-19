@@ -36,7 +36,7 @@ class Launcher(EventClass):
 
     uiElements = {}
 
-    version = "1.0.0"
+    version = "1.0.1"
 
     def initUi(self):
 
@@ -103,14 +103,14 @@ class Launcher(EventClass):
         self.clientThread.started.connect(self.client.run)
         self.clientThread.start()
 
-        self.loaderThread = QThread()
-        self.loader = Loader(self.uiElements)
-        self.loader.moveToThread(self.loaderThread)
-        self.loader.client = self.client
-        self.client.loader = self.loader
+        # self.loaderThread = QThread()
+        # self.loader = Loader(self.uiElements)
+        # self.loader.moveToThread(self.loaderThread)
+        # self.loader.client = self.client
+        # self.client.loader = self.loader
 
-        self.loaderThread.started.connect(self.loader.run)
-        self.loaderThread.start()
+        # self.loaderThread.started.connect(self.loader.run)
+        # self.loaderThread.start()
 
         # SET TIMER FOR EVENT LOOP
         timer = QtCore.QTimer()
@@ -177,7 +177,7 @@ class Launcher(EventClass):
     def closeThreads(self):
         logger.info("Terminated threads")
         self.clientThread.terminate()
-        self.loaderThread.terminate()
+        # self.loaderThread.terminate()
 
     def waitForEvents(self):
         app.processEvents()  # Qt events

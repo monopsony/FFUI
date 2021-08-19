@@ -319,9 +319,10 @@ class MBInfo:
                 craftPrice += (
                     min(compInfo["minPrice"], self.mbGetCraftPrice(compItem)) * amount
                 )
-
             craftPrice /= recipe["AmountResult"]
 
+        if np.isnan(craftPrice):
+            craftPrice = np.inf
         self.mbInfo.loc[key, "craftPrice"] = craftPrice
         return craftPrice
 

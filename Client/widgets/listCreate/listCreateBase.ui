@@ -182,14 +182,14 @@
          <item row="2" column="1">
           <widget class="QLineEdit" name="maxItemLevelEdit"/>
          </item>
-         <item row="6" column="0">
+         <item row="7" column="0">
           <widget class="QLabel" name="glamourousLabel">
            <property name="text">
             <string>Glamourous</string>
            </property>
           </widget>
          </item>
-         <item row="6" column="1">
+         <item row="7" column="1">
           <widget class="QComboBox" name="glamourousDD">
            <item>
             <property name="text">
@@ -218,14 +218,14 @@
          <item row="5" column="1">
           <widget class="QLineEdit" name="minStackSizeEdit"/>
          </item>
-         <item row="7" column="0">
+         <item row="8" column="0">
           <widget class="QLabel" name="craftableLabel">
            <property name="text">
             <string>Craftable</string>
            </property>
           </widget>
          </item>
-         <item row="7" column="1">
+         <item row="8" column="1">
           <widget class="QComboBox" name="craftableDD">
            <item>
             <property name="text">
@@ -263,6 +263,16 @@
          </item>
          <item row="4" column="1">
           <widget class="QLineEdit" name="maxEquipLevelEdit"/>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="maxStackSizeLabel">
+           <property name="text">
+            <string>Max Stack Size</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLineEdit" name="maxStackSizeEdit"/>
          </item>
         </layout>
        </widget>
