@@ -30,8 +30,10 @@ class listsList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             eventName="LISTSLISTTABLE",
             cellHeight=33,
             configKey="listsListTable",
+            isMenu=True,
         )
         self.leftLayout.replaceWidget(self.listsListTablePlaceholder, listsListTable)
+        self.listsListTablePlaceholder.hide()
         self.listsListTable = listsListTable
 
         ## REPLACE PLACEHOLDER lists PEEK

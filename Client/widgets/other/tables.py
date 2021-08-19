@@ -288,6 +288,7 @@ class listCraftTable(genericListTable, pandaTable):
             cellHeight=30,
             iconApplicationCol=0,
             iconDataCol="Icon",
+            hasQuery=True,
             **kwargs,
         )
 

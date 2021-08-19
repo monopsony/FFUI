@@ -1,4 +1,5 @@
 # added stuff
+config.json
 *_bkp.*
 Client/Lists/*.json
 Client/.qt_for_python/

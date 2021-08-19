@@ -125,12 +125,13 @@
     },
     "itemFlipTable": {
       "columnWidths": {
-        "Name": 300
+        "Name": 300,
+        "averagePriceHQ": 757
       }
     },
     "itemInfoTable": {
       "columnWidths": {
-        "ItemId": 1115,
+        "ItemId": 1446,
         "Name": 300,
         "Unnamed: 0": 1115
       },
@@ -746,7 +747,7 @@
           "useK": false
         },
         "Rarity": {
-          "decimalFormatting": "{:.4f}",
+          "decimalFormatting": "{:.0f}",
           "shown": true,
           "useK": false
         },
@@ -794,8 +795,10 @@
     },
     "itemListTable": {
       "columnWidths": {
-        "Name": 254
-      }
+        "Name": 294
+      },
+      "columns": {},
+      "currentSearch": ""
     },
     "itemListingsTable": {
       "columnWidths": {
@@ -804,7 +807,7 @@
         "pricePerUnit": 117,
         "quantity": 78,
         "retainerName": 172,
-        "total": 844
+        "total": 878
       },
       "columns": {
         "hq": {
@@ -839,9 +842,65 @@
         "columnWidths": {
           "Name": 300,
           "craftPrice": 93,
-          "expectedCraftProfit": 193,
-          "expectedCraftProfitPerDay": 226,
-          "salesPerDay": 169
+          "expectedCraftProfit": 123,
+          "expectedCraftProfitPerDay": 353,
+          "salesPerDay": 123
+        },
+        "columns": {
+          "Quality": {
+            "decimalFormatting": "{}",
+            "shown": true,
+            "useK": false
+          },
+          "averagePrice": {
+            "decimalFormatting": "{:.1f}",
+            "shown": true,
+            "useK": true
+          },
+          "craftPrice": {
+            "decimalFormatting": "{:.0f}",
+            "shown": true,
+            "useK": true
+          },
+          "expectedCraftProfit": {
+            "decimalFormatting": "{:.0f}",
+            "shown": true,
+            "useK": true
+          },
+          "expectedCraftProfitPerDay": {
+            "decimalFormatting": "{:.0f}",
+            "shown": true,
+            "useK": true
+          },
+          "minPrice": {
+            "decimalFormatting": "{:.1f}",
+            "shown": true,
+            "useK": true
+          },
+          "salesPerDay": {
+            "decimalFormatting": "{:.2f}",
+            "shown": true,
+            "useK": false
+          }
+        }
+      },
+      "columnWidths": {
+        "Name": 300
+      },
+      "exa1": {
+        "columnWidths": {
+          "Name": 300,
+          "expectedCraftProfit": 130,
+          "expectedCraftProfitPerDay": 291,
+          "salesPerDay": 177
+        }
+      },
+      "exarchic": {
+        "columnWidths": {
+          "Name": 300,
+          "expectedCraftProfit": 176,
+          "expectedCraftProfitPerDay": 293,
+          "salesPerDay": 162
         },
         "columns": {
           "Quality": {
@@ -879,26 +938,9 @@
             "shown": true,
             "useK": false
           }
-        }
-      },
-      "columnWidths": {
-        "Name": 300
-      },
-      "exa1": {
-        "columnWidths": {
-          "Name": 300,
-          "expectedCraftProfit": 130,
-          "expectedCraftProfitPerDay": 291,
-          "salesPerDay": 177
-        }
-      },
-      "exarchic": {
-        "columnWidths": {
-          "Name": 300,
-          "expectedCraftProfit": 176,
-          "expectedCraftProfitPerDay": 243,
-          "salesPerDay": 162
-        }
+        },
+        "currentQuery": "",
+        "currentSearch": ""
       },
       "exatest": {
         "columnWidths": {
@@ -916,7 +958,7 @@
         "columnWidths": {
           "Name": 300,
           "expectedCraftProfit": 166,
-          "expectedCraftProfitPerDay": 240,
+          "expectedCraftProfitPerDay": 290,
           "salesPerDay": 182
         },
         "columns": {
@@ -955,12 +997,14 @@
             "shown": true,
             "useK": false
           }
-        }
+        },
+        "currentQuery": "minPrice > 10",
+        "currentSearch": "silver"
       },
       "uru": {
         "columnWidths": {
           "Name": 300,
-          "expectedCraftProfitPerDay": 587
+          "expectedCraftProfitPerDay": 431
         },
         "columns": {
           "Quality": {
@@ -998,7 +1042,9 @@
             "shown": true,
             "useK": false
           }
-        }
+        },
+        "currentQuery": "",
+        "currentSearch": ""
       }
     },
     "listInfoTable": {
@@ -1015,9 +1061,13 @@
       },
       "casting exarchic": {
         "columnWidths": {
-          "CraftType": 803,
+          "CraftType": 838,
           "Name": 300
-        }
+        },
+        "sort": [
+          "ItemId",
+          1
+        ]
       },
       "chicken": {
         "columnWidths": {
@@ -1044,10 +1094,15 @@
       },
       "exarchic": {
         "columnWidths": {
-          "CraftType": 733,
+          "CraftType": 803,
           "Craftable": 99,
           "Name": 349
-        }
+        },
+        "currentSearch": "",
+        "sort": [
+          "Name",
+          1
+        ]
       },
       "exatest": {
         "columnWidths": {
@@ -1071,7 +1126,7 @@
       },
       "rubbersilver": {
         "columnWidths": {
-          "CraftType": 816,
+          "CraftType": 866,
           "Craftable": 92,
           "ItemId": 80,
           "Name": 300
@@ -1092,7 +1147,15 @@
             "shown": true,
             "useK": false
           }
-        }
+        },
+        "sort": [
+          "ItemId",
+          1
+        ],
+        "sortCol": [
+          "Name",
+          1
+        ]
       },
       "test1": {
         "columnWidths": {
@@ -1111,7 +1174,7 @@
       },
       "uru": {
         "columnWidths": {
-          "CraftType": 712,
+          "CraftType": 769,
           "Craftable": 85,
           "Name": 384
         },
@@ -1131,7 +1194,11 @@
             "shown": true,
             "useK": false
           }
-        }
+        },
+        "sort": [
+          "ItemId",
+          0
+        ]
       },
       "werwerwer": {
         "columnWidths": {
@@ -1141,7 +1208,7 @@
     },
     "listItemListTable": {
       "columnWidths": {
-        "ItemId": 770,
+        "ItemId": 1105,
         "Name": 300
       }
     },
@@ -1149,7 +1216,7 @@
       "casting exarchic": {
         "columnWidths": {
           "Name": 300,
-          "salesPerDay": 681
+          "salesPerDay": 699
         }
       },
       "columnWidths": {
@@ -1166,7 +1233,7 @@
       "exarchic": {
         "columnWidths": {
           "Name": 300,
-          "salesPerDay": 688
+          "salesPerDay": 738
         }
       },
       "exatest": {
@@ -1182,7 +1249,7 @@
         "columnWidths": {
           "Name": 300,
           "bogus": 501,
-          "salesPerDay": 688
+          "salesPerDay": 738
         },
         "columns": {
           "Quality": {
@@ -1211,7 +1278,7 @@
         "columnWidths": {
           "Name": 300,
           "bogus": 591,
-          "salesPerDay": 894
+          "salesPerDay": 1075
         }
       }
     },

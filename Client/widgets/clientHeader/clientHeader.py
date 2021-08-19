@@ -11,14 +11,15 @@ class clientHeader(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         super().__init__(*args, **kwargs)
 
         self.setupUi(self)
+        self.setObjectName("menuFrame")
 
         self.eventSubscribe("CLIENT_FREE", self.setFree)
         self.eventSubscribe("CLIENT_BUSY", self.setBusy)
         self.eventSubscribe("CLIENT_PROGRESS", self.setBusy)
 
     def setFree(self):
-        self.label.setText("Client is free")
-        self.label.setStyleSheet("color: #648b46;")
+        self.menuLabel.setText("Client is free")
+        self.menuLabel.setStyleSheet("color: #648b46;")
         self.progressBar.hide()
 
     def setBusy(self, *args):
@@ -27,10 +28,10 @@ class clientHeader(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             return self.setFree()
 
         if client.progressText is None:
-            self.label.setText("Client is busy")
+            self.menuLabel.setText("Client is busy")
         else:
-            self.label.setText(client.progressText)
-        self.label.setStyleSheet("color: #984343;")
+            self.menuLabel.setText(client.progressText)
+        self.menuLabel.setStyleSheet("color: #984343;")
 
         if client.currentMax > 1:
             self.progressBar.show()

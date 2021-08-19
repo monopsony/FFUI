@@ -1,10 +1,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMenuBar, QMainWindow
 from PyQt5.QtCore import (
     QObject,
     QThread,
     pyqtSignal,
     QSortFilterProxyModel,
     QTimer,
+    Qt,
 )
 from widgets.itemList.itemList import itemList
 from widgets.listCreate.listCreate import listCreate
@@ -21,6 +23,12 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+BASE_CONFIG = {
+    "connectedWorlds": ["Lich", "Odin", "Phoenix", "Zodiark", "Twintania"],
+    "nSemaphores": 3,
+    "world": "Shiva",
+}
+
 
 class Launcher(EventClass):
     def __init__(self):
@@ -30,9 +38,20 @@ class Launcher(EventClass):
 
     def initUi(self):
 
+        # create main window
+        mainWindow = QMainWindow()
+        self.uiElements["mainWindow"] = mainWindow
+        self.mainWindow = mainWindow
+        mainWindow.resize(1700, 1200)
+        mainWindow.setWindowTitle("Sapphire Avenue Exchange")
+        # self.mainWindow.setWindowFlags(Qt.FramelessWindowHint)
+
+        self.createMenuBar()
+
         # CREATE LEFT TABS
         ltwidget = leftTabs(self)
         self.uiElements["leftTabs"] = ltwidget
+        self.mainWindow.setCentralWidget(ltwidget)
 
         # CREATE ITEM LIST
         ilwidget = itemList(self)
@@ -55,14 +74,18 @@ class Launcher(EventClass):
         ltwidget.createListsTab = clwidget
         ltwidget.tabWidget.addTab(clwidget, "Create List")
 
-        self.uiElements["leftTabs"].show()
+        self.mainWindow.show()
+
+    def createMenuBar(self):
+        menubar = QMenuBar(self.mainWindow)
+        self.mainWindow.setMenuBar(menubar)
 
     def launch(self):
 
         self.loadConfigFile()
 
         app = QtWidgets.QApplication(sys.argv)
-        style = open("stylesheet_bkp.qss").read()
+        style = open(os.path.join("stylesheets", "custom.qss")).read()
         app.setStyle("Fusion")
         app.setStyleSheet(style)
 
@@ -109,6 +132,11 @@ class Launcher(EventClass):
         # sys.exit(0)
 
     def loadConfigFile(self):
+
+        if not os.path.exists("config.json"):
+            with open("config.json", "w+") as f:
+                f.write(json.dumps(BASE_CONFIG, indent=2, sort_keys=True))
+
         with open("config.json", "r") as f:
             p = json.load(f)
 

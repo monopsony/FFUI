@@ -41,10 +41,13 @@ class itemList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             iconApplicationCol=0,
             iconDataCol="Icon",
             configKey="itemListTable",
-            hasConfig=False,
+            hasConfig=True,
+            isMenu=True,
         )
         self.leftLayout.replaceWidget(self.itemListTablePlaceholder, itemListTable)
+        self.itemListTablePlaceholder.hide()
         self.itemListTable = itemListTable
+        # itemListTable.setObjectName("menuFrame")
 
         ## REPLACE PLACEHOLDER ITEM PEEK
         peek = itemPeek(self.launcher)

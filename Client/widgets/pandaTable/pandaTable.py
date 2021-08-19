@@ -19,6 +19,28 @@ BASE_PANDATABLE_CONFIG = {
     }
 }
 
+# https://forum.qt.io/topic/96989/how-to-remove-decoration-tinting-of-selected-items-in-item-views/9
+# to remove blue tint on icon when selected
+def uniformIcon(path):
+    icon = QIcon()
+    pixmap = QPixmap(path)
+    for state in [QIcon.Off, QIcon.On]:
+        for mode in [QIcon.Normal, QIcon.Disabled, QIcon.Active, QIcon.Selected]:
+            icon.addPixmap(pixmap, mode, state)
+
+    return icon
+
+
+# QIcon uniformIcon(const QString& path){
+#     const QPixmap basePixmap(path);
+#     QIcon result;
+#     for (auto state : {QIcon::Off, QIcon::On}){
+#         for (auto mode : {QIcon::Normal, QIcon::Disabled, QIcon::Active, QIcon::Selected})
+#             result.addPixmap(basePixmap, mode, state);
+#     }
+#     return result;
+# }
+
 
 class TableModel(QtCore.QAbstractTableModel):
     def __init__(self, launcher, parent):
@@ -72,7 +94,7 @@ class TableModel(QtCore.QAbstractTableModel):
         ):
             value = self._data[self.iconDataCol].iloc[row]
             iconId = self.launcher.client.getIconPath(value)
-            return QtGui.QIcon(iconId)
+            return uniformIcon(iconId)
 
     def rowCount(self, index):
         if self.empty:
@@ -100,7 +122,8 @@ class TableModel(QtCore.QAbstractTableModel):
             return
 
         col = self.columns[Ncol]
-        self.parent.setData(self._data, sort=col, sortOrder=order)
+        self.parent.setConfig("sort", (col, order))
+        self.parent.refresh()
 
 
 class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
@@ -121,6 +144,8 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         sortingEnabled=True,
         configKey="generic",
         hasConfig=True,
+        isMenu=False,
+        hasQuery=False,
         **kwargs,
     ):
         self.launcher = launcher
@@ -130,6 +155,16 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         # parameters
         self.eventName = eventName
         self.configKey = configKey
+
+        if isMenu:
+            self.widget.setObjectName("menuFrame")
+            self.frame.setObjectName("menuFrame")
+
+        self.hasQuery = hasQuery
+        if not hasQuery:
+            self.queryWidget.hide()
+        else:
+            self.queryEdit.returnPressed.connect(self.applyQuery)
 
         # setup model
         model = TableModel(self.launcher, self)
@@ -196,40 +231,62 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
     eventName = None
     filterKey = None
 
+    def filterData(self, data):
+
+        if len(data) == 0:
+            return data
+
+        ## SEARCH FILTER
+        text = self.getConfig("currentSearch")
+        if (self.filterKey is not None) and (len(data) != 0):
+
+            if text is None:
+                text = self.filterEdit.text()
+                logger.debug(
+                    f"No text was given to pandatable {type(self)}, found `{text}` instead"
+                )
+            try:
+                re.compile(text)
+                colData = data[self.filterKey]
+                truth = colData.str.contains(text.lower())
+                data = data[truth]
+                data.reset_index(drop=True, inplace=True)
+            except re.error:
+                pass
+            except Exception as e:
+                logger.error(f"Exception while applying search filter: {e}")
+                logger.error(f"{traceback.format_exc()}")
+
+        ## SEARCH FILTER
+        text = self.getConfig("currentQuery")
+        if (text is not None) and (text.strip() != "") and (len(data) != 0):
+
+            try:
+                data = data.query(text)
+                data.reset_index(drop=True, inplace=True)
+            except Exception as e:
+                logger.error(f"failed to apply current query/filter: {e}")
+                logger.error(f"{traceback.format_exc()}")
+
+        return data
+
     # apply filters
     def applyFilter(self, text):
-        if text is None:
-            text = self.filterEdit.text()
-            logger.debug(
-                f"No text was given to pandatable {type(self)}, found `{text}` instead"
-            )
+        self.setConfig("currentSearch", text)
+        self.refresh()
 
-        if (self.filterKey is None) or len(self.model._baseData) == 0:
-            return
-
-        try:
-            re.compile(text)
-        except re.error:
-            return
-
-        colData = self.model._baseData[self.filterKey]
-        truth = colData.str.contains(text.lower())
-        filteredData = self.model._baseData[truth]
-        filteredData.reset_index(drop=True, inplace=True)
-        self.setData(filteredData)
-
-    lastSortedCol = None
-    lastSortOrder = None
+    def applyQuery(self):
+        text = self.queryEdit.text()
+        self.setConfig("currentQuery", text)
+        self.refresh()
 
     def setData(self, data, cols=None, base=False, sort=None, sortOrder=True):
         self.model.empty = False
 
         if sort is None:
-            sort = self.lastSortedCol
-            sortOrder = self.lastSortOrder
-        else:
-            self.lastSortedCol = sort
-            self.lastSortOrder = sortOrder
+            sortTuple = self.getConfig("sort")
+            if sortTuple is not None:
+                sort, sortOrder = sortTuple
 
         if sort is not None:
             try:
@@ -257,10 +314,13 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             self.baseColumns = cols
             self.applyConfig()
 
-        self.model._data = data
+        # apply filters
+        dataFiltered = self.filterData(data)
+
+        self.model._data = dataFiltered
         index0 = self.model.createIndex(0, 0)
         index1 = self.model.createIndex(
-            len(data), (isSeries and 1) or len(self.model.columns)
+            len(dataFiltered), (isSeries and 1) or len(self.model.columns)
         )
         self.model.dataChanged.emit(index0, index1)
         self.model.layoutChanged.emit()
@@ -268,6 +328,7 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         if base:
             self.model._baseData = data
             self.applyConfigColumnWidths()
+            self.applySortArrow()
 
     def itemSelectionChanged(self):
 
@@ -324,6 +385,25 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             if colName in conf:
                 self.tableView.setColumnWidth(i, conf[colName])
 
+    def applySortArrow(self):
+        # set sort arrow correctly
+        sortTuple = self.getConfig("sort")
+        if sortTuple is None:
+            return
+
+        sort, sortOrder = sortTuple
+
+        cols = self.model.columns
+        if sort not in cols:
+            return
+
+        colIndex = cols.index(sort)
+
+        tv = self.tableView
+        tv.horizontalHeader().setSortIndicator(
+            colIndex, sortOrder and Qt.DescendingOrder or Qt.AscendingOrder
+        )
+
     baseColumns = None
 
     def refresh(self):
@@ -354,6 +434,16 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
                 self.model.formatting[col] = form
 
             self.model.useK[col] = self.getConfig(["columns", col, "useK"])
+
+        # set search and query to last thing
+        # search
+        searchText = self.getConfig("currentSearch")
+        if self.filterKey is not None:
+            self.filterEdit.setText(searchText)
+
+        queryText = self.getConfig("currentQuery")
+        if self.hasQuery:
+            self.queryEdit.setText(queryText)
 
     def onColumnResize(self, colIndex, oldSize, newSize):
         col = self.model.columns[colIndex]

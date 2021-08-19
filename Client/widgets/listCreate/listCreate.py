@@ -31,9 +31,11 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             iconDataCol="Icon",
             multiSelect=True,
             configKey="itemListTable",
-            hasConfig=False,
+            hasConfig=True,
+            isMenu=True,
         )
         self.leftLayout.replaceWidget(self.itemListTablePlaceholder, itemListTable)
+        self.itemListTablePlaceholder.hide()
         self.itemListTable = itemListTable
 
         ## REPLACE PLACEGOLDER LIST ITEM LIST TABLE
