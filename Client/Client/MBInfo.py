@@ -304,7 +304,6 @@ class MBInfo:
             world = self.getConfig("world")
 
         key = self.mbItemWorldKey(item, world)
-        print(self.mbInfo.loc[key], key)
         if not np.isnan(self.mbInfo.loc[key, "craftPrice"]):
             return self.mbInfo.loc[key, "craftPrice"]
 
