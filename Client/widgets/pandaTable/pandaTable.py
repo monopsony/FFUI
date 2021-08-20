@@ -2,7 +2,14 @@ from .pandaTableBase import Ui_Form
 from .configWindow import configWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QSortFilterProxyModel, Qt, QSize
-from PyQt5.QtGui import QStandardItemModel, QStandardItem, QPixmap, QIcon
+from PyQt5.QtGui import (
+    QStandardItemModel,
+    QStandardItem,
+    QPixmap,
+    QIcon,
+    QBrush,
+    QColor,
+)
 from Events import EventWidgetClass
 from collections import defaultdict
 from numbers import Number
@@ -10,6 +17,7 @@ import re
 import pandas as pd
 import logging, traceback, copy
 from pandas.api.types import is_numeric_dtype
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -31,15 +39,12 @@ def uniformIcon(path):
     return icon
 
 
-# QIcon uniformIcon(const QString& path){
-#     const QPixmap basePixmap(path);
-#     QIcon result;
-#     for (auto state : {QIcon::Off, QIcon::On}){
-#         for (auto mode : {QIcon::Normal, QIcon::Disabled, QIcon::Active, QIcon::Selected})
-#             result.addPixmap(basePixmap, mode, state);
-#     }
-#     return result;
-# }
+ROWCOLOR_EVEN = QColor("#4f4f4f")
+ROWCOLOR_ODD = QColor("#4a4a4a")
+RETBLCOLOR_EVEN = QColor("#544a4a")
+RETBLCOLOR_ODD = QColor("#4e4646")
+LISTBLCOLOR_EVEN = QColor("#565248")
+LISTBLCOLOR_ODD = QColor("#514d43")
 
 
 class TableModel(QtCore.QAbstractTableModel):
@@ -59,6 +64,7 @@ class TableModel(QtCore.QAbstractTableModel):
     empty = True
     formatting = defaultdict(lambda: "{}")
     useK = defaultdict(lambda: False)
+    hasBlacklistColumn = False
 
     def data(self, index, role):
         row, col = index.row(), index.column()
@@ -95,6 +101,19 @@ class TableModel(QtCore.QAbstractTableModel):
             value = self._data[self.iconDataCol].iloc[row]
             iconId = self.launcher.client.getIconPath(value)
             return uniformIcon(iconId)
+
+        if role == Qt.BackgroundRole:
+            bl = self.hasBlacklistColumn and self._data.at[row, "blacklisted"]
+            if (type(bl) != str) or (self.isSeries):
+                color = (row % 2 == 0 and ROWCOLOR_EVEN) or ROWCOLOR_ODD
+                return QBrush(color)
+
+            if bl == "Already listed":
+                color = (row % 2 == 0 and LISTBLCOLOR_EVEN) or LISTBLCOLOR_ODD
+                return QBrush(color)
+            else:
+                color = (row % 2 == 0 and RETBLCOLOR_EVEN) or RETBLCOLOR_ODD
+                return QBrush(color)
 
     def rowCount(self, index):
         if self.empty:
@@ -317,6 +336,7 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         # apply filters
         dataFiltered = self.filterData(data)
 
+        self.model.hasBlacklistColumn = "blacklisted" in self.baseColumns
         self.model._data = dataFiltered
         index0 = self.model.createIndex(0, 0)
         index1 = self.model.createIndex(
@@ -324,6 +344,7 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         )
         self.model.dataChanged.emit(index0, index1)
         self.model.layoutChanged.emit()
+        self.tableView.clearSelection()
 
         if base:
             self.model._baseData = data

@@ -38,9 +38,9 @@ class Ui_Form(object):
         self.listImage.setScaledContents(False)
         self.listImage.setObjectName("listImage")
         self.horizontalLayout.addWidget(self.listImage)
-        self.label = QtWidgets.QLabel(self.topFrame)
-        self.label.setObjectName("label")
-        self.horizontalLayout.addWidget(self.label)
+        self.titleLabel = QtWidgets.QLabel(self.topFrame)
+        self.titleLabel.setObjectName("titleLabel")
+        self.horizontalLayout.addWidget(self.titleLabel)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.editButton = QtWidgets.QPushButton(self.topFrame)
@@ -61,7 +61,7 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
-        self.label.setText(_translate("Form", "N/A"))
+        self.titleLabel.setText(_translate("Form", "N/A"))
         self.editButton.setText(_translate("Form", "Edit"))
         self.deleteButton.setText(_translate("Form", "Delete"))
         self.infoLabel.setText(_translate("Form", "N/A"))

@@ -1,7 +1,32 @@
 import pandas as pd
+import os, importlib
 
+customMetricsString = r"""
+import pandas as pd
 
 class Metrics:
+    @staticmethod
+    def bogusMetric(df):
+        return 1234
+
+ACTIVE_METRICS = {
+    "INFO": {}, # {nameOfMetrics: Metrics.nameOfMethod, ...}
+    "CRAFT": {},
+    "FLIP": {},
+}
+"""
+
+customMetricsPath = os.path.join("Client", "MetricsCustom.py")
+if not os.path.exists(customMetricsPath):
+    with open(customMetricsPath, "w+") as f:
+        f.write(customMetricsString)
+
+custom = importlib.import_module("Client.MetricsCustom")
+ACTIVE_METRICS = custom.ACTIVE_METRICS
+customMetrics = custom.Metrics
+
+
+class Metrics(customMetrics):
     @staticmethod
     def expectedCraftProfit(df):
         price = df[["averagePrice", "minPrice"]].min(axis=1)
@@ -11,16 +36,6 @@ class Metrics:
     def expectedCraftProfitPerDay(df):
         return df["expectedCraftProfit"] * df["salesPerDay"]
 
-    @staticmethod
-    def bogusMetric(df):
-        return 1234
 
-
-ACTIVE_METRICS = {
-    "INFO": {},
-    "CRAFT": {
-        "expectedCraftProfit": Metrics.expectedCraftProfit,
-        "expectedCraftProfitPerDay": Metrics.expectedCraftProfitPerDay,
-    },
-    "FLIP": {},
-}
+ACTIVE_METRICS["CRAFT"]["expectedCraftProfit"] = Metrics.expectedCraftProfit
+ACTIVE_METRICS["CRAFT"]["expectedCraftProfitPerDay"] = Metrics.expectedCraftProfitPerDay

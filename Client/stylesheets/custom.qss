@@ -15,6 +15,11 @@ QWidget
     background-color: #303030;
 }
 
+QLabel#titleLabel
+{
+    font: 87 15pt "Arial";
+}
+
 QFrame
 {
     border: 0px;

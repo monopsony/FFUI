@@ -24,6 +24,7 @@ DEFAULT_COLUMNS = [
     "itemID",
     "lastUploadTime",
     "listings",
+    "blacklisted",
     "maxPrice",
     "maxPriceHQ",
     "maxPriceNQ",
@@ -74,6 +75,20 @@ class MBInfo:
 
         return itemsUnique, worldsUnique
 
+    def getBlacklisted(self, listingsList):
+        blRetainers = self.getConfig("retainerBlacklist")
+        for x in listingsList:
+            retName = x["retainerName"]
+            if retName in blRetainers:
+                return f"Retainer: {retName}"
+        return np.nan
+
+    def getAlreadyListed(self, itemId):
+        listings = self.getConfig("currentListings")
+        if itemId in listings:
+            return "Already listed"
+        return np.nan
+
     def fetchMBInfo(self, items, worlds=None, quiet=False):
         if type(items) == pd.DataFrame:
             seriesList = []
@@ -106,6 +121,13 @@ class MBInfo:
         d["Name"] = names
         d["Icon"] = icons
         d["NameKey"] = nameKey
+        d["ItemId"] = ids
+
+        # check the blacklist
+        retainerBL = d["listings"].map(self.getBlacklisted, na_action="ignore")
+        listedBL = d["ItemId"].map(self.getAlreadyListed, na_action="ignore")
+        listedBL.update(retainerBL)
+        d["blacklisted"] = listedBL
 
         ## Add seperate HQ and NQ
         dhq, dnq = d.copy(), d.copy()

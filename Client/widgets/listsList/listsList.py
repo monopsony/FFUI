@@ -102,6 +102,8 @@ class listsList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
     selectedList = None
 
     def applyListSelection(self, lst, col=0):
+        if lst is None:
+            return
         logger.debug(f"applying list selection: {lst['Name']}")
         self.selectedList = lst
         client = self.launcher.client

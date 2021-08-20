@@ -3,6 +3,7 @@ debug.log
 config.json
 *_bkp.*
 Client/Cache/*.csv
+Client/Client/MetricsCustom.py
 Client/Lists/*_.json
 Client/.qt_for_python/
 

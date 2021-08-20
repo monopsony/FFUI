@@ -38,9 +38,9 @@ class Ui_Form(object):
         self.itemImage.setScaledContents(False)
         self.itemImage.setObjectName("itemImage")
         self.horizontalLayout.addWidget(self.itemImage)
-        self.label = QtWidgets.QLabel(self.topFrame)
-        self.label.setObjectName("label")
-        self.horizontalLayout.addWidget(self.label)
+        self.titleLabel = QtWidgets.QLabel(self.topFrame)
+        self.titleLabel.setObjectName("titleLabel")
+        self.horizontalLayout.addWidget(self.titleLabel)
         self.verticalLayout.addWidget(self.topFrame)
         self.label_2 = QtWidgets.QLabel(Form)
         self.label_2.setMaximumSize(QtCore.QSize(16777215, 20))
@@ -53,5 +53,5 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
-        self.label.setText(_translate("Form", "N/A"))
+        self.titleLabel.setText(_translate("Form", "N/A"))
         self.label_2.setText(_translate("Form", "itemType"))

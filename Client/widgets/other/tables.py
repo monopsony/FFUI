@@ -76,6 +76,7 @@ class itemCraftTable(pandaTable):
             "maxPrice",
             "maxPriceNQ",
             "maxPriceHQ",
+            "blacklisted",
         ]
         cols += list(ACTIVE_METRICS["CRAFT"].keys())
         self.setData(info, cols=cols, base=True)
@@ -268,6 +269,7 @@ class listListingsTable(genericListTable, pandaTable):
             "averagePrice",
             "minPrice",
             "salesPerDay",
+            "blacklisted",
         ]
         cols += list(ACTIVE_METRICS["INFO"].keys())
 
@@ -326,6 +328,7 @@ class listCraftTable(genericListTable, pandaTable):
             "averagePrice",
             "minPrice",
             "salesPerDay",
+            "blacklisted",
         ]
         cols += list(ACTIVE_METRICS["CRAFT"].keys())
 

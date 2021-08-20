@@ -14,7 +14,7 @@ class itemPeek(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         self.eventSubscribe("ITEMLIST_ITEM_SELECTED", self.applyItem)
 
     def applyItem(self, item, col):
-        self.label.setText(item["Name"])
+        self.titleLabel.setText(item["Name"])
         client = self.launcher.client
 
         icon_path = client.getIconPath(item["Icon"])

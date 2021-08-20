@@ -30,7 +30,7 @@ class listPeek(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             self.infoLabel.setText("")
             return
 
-        self.label.setText(lst["Name"])
+        self.titleLabel.setText(lst["Name"])
         client = self.launcher.client
 
         self.infoLabel.setText(f'Number of items: {len(lst["ItemIds"])}')

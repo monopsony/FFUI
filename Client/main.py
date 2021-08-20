@@ -39,7 +39,7 @@ class Launcher(EventClass):
 
     uiElements = {}
 
-    version = "1.0.1"
+    version = "1.1.0"
 
     def initUi(self):
 
@@ -89,7 +89,7 @@ class Launcher(EventClass):
         reply = QMessageBox.question(
             self.mainWindow,
             f"MBInfo in cache",
-            f"Found market board information in the cache, generated {dt//60:.0f} minutes {dt%60:.0f} seconds ago. Do you want to re-load?",
+            f"Found market board information in the cache, generated {dt//60:.0f} minutes {dt%60:.0f} seconds ago. Do you want to re-load?\n\nWhen NOT to reload from cache:\n- New metrics were added\n- Blacklists/Current listings were changed\n- Prices are likely to be out of date",
             QMessageBox.Yes | QMessageBox.No,
             defaultButton=QMessageBox.No,
         )

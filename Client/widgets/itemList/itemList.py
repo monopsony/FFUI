@@ -121,5 +121,6 @@ class itemList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
     #     self.eventPush("ITEMLIST_ITEM_CHANGED", name.lower())
 
     def applyItemSelection(self, item, *args):
-        logger.debug(f"applying item selection: {item['Name']} / {item['ItemId']}")
-        self.eventPush("ITEMLIST_ITEM_SELECTED", item, *args)
+        if item is not None:
+            logger.debug(f"applying item selection: {item['Name']} / {item['ItemId']}")
+            self.eventPush("ITEMLIST_ITEM_SELECTED", item, *args)
