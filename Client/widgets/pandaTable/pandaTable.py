@@ -103,7 +103,11 @@ class TableModel(QtCore.QAbstractTableModel):
             return uniformIcon(iconId)
 
         if role == Qt.BackgroundRole:
-            bl = self.hasBlacklistColumn and self._data.at[row, "blacklisted"]
+            bl = (
+                (self.hasBlacklistColumn and not self.isSeries)
+                and self._data.at[row, "blacklisted"]
+                or None
+            )
             if (type(bl) != str) or (self.isSeries):
                 color = (row % 2 == 0 and ROWCOLOR_EVEN) or ROWCOLOR_ODD
                 return QBrush(color)

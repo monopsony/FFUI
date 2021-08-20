@@ -117,7 +117,7 @@ class itemListingsTable(pandaTable):
 
         info = client.mbGetItemInfo(self.selectedItem)
         listings = info["listings"]
-        if (type(listings) != list) and (np.isnan(listings)):
+        if (type(listings) != list) or (type(listings) == float and np.isnan(listings)):
             self.setEmpty()
             return
 

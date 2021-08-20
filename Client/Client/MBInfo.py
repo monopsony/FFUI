@@ -109,7 +109,7 @@ class MBInfo:
         logger.debug(f"Fetching MB info for: {index}")
 
         d = self.gatherUniversalisQueries(zip(ids, worlds))
-        d = pd.DataFrame(d, index=index)
+        d = pd.DataFrame(d, index=index, columns=DEFAULT_COLUMNS)
 
         # change name of some columns
         d.rename(
