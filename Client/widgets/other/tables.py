@@ -289,6 +289,7 @@ class listCraftTable(genericListTable, pandaTable):
             iconApplicationCol=0,
             iconDataCol="Icon",
             hasQuery=True,
+            multiSelect=True,
             **kwargs,
         )
 
@@ -333,3 +334,37 @@ class listCraftTable(genericListTable, pandaTable):
             cols=cols,
             base=True,
         )
+
+    def getSelectedItems(self):
+        client = self.launcher.client
+        selectedIndices = self.tableView.selectionModel().selectedIndexes()
+        rows = [x.row() for x in selectedIndices]
+        data = self.model._data
+        itemSet = set()
+        for row in rows:
+            itemName = data.at[data.index[row], "Name"]
+            item = client.getItem(name=itemName)
+            if item is None:
+                logger.error(f"Found no item corresponding to name: {itemName}")
+                continue
+            itemId = item["ItemId"]
+            itemSet.add(itemId)
+
+        return itemSet
+
+    def getTopItems(self, N):
+        client = self.launcher.client
+        itemSet = set()
+        data = self.model._data
+        for row in range(len(data)):
+            itemName = data.at[data.index[row], "Name"]
+            item = client.getItem(name=itemName)
+            if item is None:
+                logger.error(f"Found no item corresponding to name: {itemName}")
+                continue
+            itemId = item["ItemId"]
+            itemSet.add(itemId)
+            if len(itemSet) >= N:
+                break
+
+        return itemSet

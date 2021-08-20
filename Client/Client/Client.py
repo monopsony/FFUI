@@ -10,6 +10,7 @@ from Client.MBInfo import MBInfo
 from Client.Recipes import RecipeHandler
 import logging
 from collections import defaultdict
+import webbrowser
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +80,8 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
             logger.warn(f"Get item called but no id or name given")
 
         if len(item) == 0:
-            return pd.Series({"ItemId": id, "Name": name, "Prohibited": True})
+            return None
+            # return pd.Series({"ItemId": id, "Name": name, "Prohibited": True})
         elif len(item) == 1:
             return item.iloc[0]
         else:
@@ -145,6 +147,25 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
         self.eventPush("CLIENT_ITEMS_LAODED")
         logger.info(f"Loaded a total of {len(self.items)} items")
 
+    currentlyLoadingCache = False
+
+    def loadCache(self):
+        self.currentLoadingCache = True
+        if not os.path.exists("Cache"):
+            os.mkdir("Cache")
+
+        # MBINFO in cache
+        mbInfoPath = os.path.join("Cache", "mbInfoC.csv")
+        if os.path.exists(mbInfoPath):
+            t = os.path.getmtime(mbInfoPath)
+            dt = time.time() - t
+            if dt <= 3600:
+                self.promptLoadMBInfoCache(dt)
+
+    def promptLoadMBInfoCache(self, dt):
+        logger.info("Found recent MBInfo in cache")
+        self.eventPush("ASK_LOAD_MBINFO_CACHE", dt)
+
     def createItemRecipeCombined(self):
         if not os.path.exists(ITEMS_FILE):
             logger.error(f"No file found under {ITEMS_FILE}. Help.")
@@ -190,10 +211,24 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
         self.loadRecipes()
         self.loadItems()
         self.loadLists()
+        self.loadCache()
 
         while True:
             time.sleep(0.1)
             self.eventHandle()
+
+    def openBrowserTab(self, url):
+        b = webbrowser.get()
+        b.open_new_tab(url)
+
+    def ffxivCraftItems(self, itemIds):
+        url = "https://ffxivcrafting.com/list/saved/"
+
+        itemStrings = [f"{x},1" for x in itemIds]
+        url = url + ":".join(itemStrings)
+
+        logger.info(f"Opening `{url}` in browser")
+        self.openBrowserTab(url)
 
     # PARAS
     def getConfig(self, *args, **kwargs):

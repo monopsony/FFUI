@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import logging, traceback
+import logging, traceback, os
 from .Metrics import ACTIVE_METRICS
 
 logger = logging.getLogger(__name__)
@@ -48,6 +48,7 @@ class MBInfo:
         self.eventSubscribe("CLIENT_MBINFO_REQUEST", self.fetchMBInfo)
         self.eventSubscribe("CLIENT_MBCRAFT_REQUEST", self.fetchCraftPrice)
         self.eventSubscribe("CLIENT_MBFLIP_REQUEST", self.fetchFlipPrice)
+        self.eventSubscribe("CLIENT_MBINFO_UPDATE", self.saveMBInfoCache)
 
     mbInfo = pd.DataFrame({}, columns=DEFAULT_COLUMNS.copy())
 
@@ -376,3 +377,16 @@ class MBInfo:
             #     )
 
         self.eventPush("CLIENT_MBINFO_UPDATE")
+
+    def saveMBInfoCache(self):
+        if len(self.mbInfo) < 10:
+            return
+        self.setProgress(
+            progressText="Saving current MBInfo to cache",
+            currentMax=0,
+            currentProgress=0,
+        )
+        logger.info(f"Saved current MBInfo to cache ({len(self.mbInfo)} items)")
+        mbInfoPath = os.path.join("Cache", "mbInfoC.csv")
+
+        self.mbInfo.to_csv(mbInfoPath)

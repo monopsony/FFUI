@@ -12,6 +12,7 @@ from widgets.other.confirmWidgets import (
     listCraftConfirmWidget,
 )
 import logging
+from .listCraftTools import listCraftTools
 
 logger = logging.getLogger(__name__)
 
@@ -77,6 +78,9 @@ class listsList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         layout.addWidget(confirm)
 
         craftTable = listCraftTable(self.launcher)
+        tools = listCraftTools(self.launcher, craftTable)
+
+        layout.addWidget(tools)
         layout.addWidget(craftTable)
 
     def fillFlipTab(self):

@@ -13,4 +13,5 @@ for x in glob.glob(os.path.join(cwd, "widgets", "*")):
         pyName = uiName.replace(".ui", ".py")
 
         os.system(f"pyuic5 -o {pyName} {uiName}")
+
         print(f"Updated {pyName}")

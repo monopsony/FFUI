@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMenuBar, QMainWindow
+from PyQt5.QtWidgets import QMenuBar, QMainWindow, QMessageBox
 from PyQt5.QtCore import (
     QObject,
     QThread,
@@ -15,6 +15,7 @@ from widgets.leftTabs.leftTabs import leftTabs
 from Client.Client import Client
 from Loader import Loader
 import sys, traceback, os, json
+import pandas as pd
 from Events import EventClass
 import logging
 
@@ -33,6 +34,8 @@ BASE_CONFIG = {
 class Launcher(EventClass):
     def __init__(self):
         super().__init__()
+
+        self.eventSubscribe("ASK_LOAD_MBINFO_CACHE", self.mbinfoCachePrompt)
 
     uiElements = {}
 
@@ -81,6 +84,24 @@ class Launcher(EventClass):
     def createMenuBar(self):
         menubar = QMenuBar(self.mainWindow)
         self.mainWindow.setMenuBar(menubar)
+
+    def mbinfoCachePrompt(self, dt):
+        reply = QMessageBox.question(
+            self.mainWindow,
+            f"MBInfo in cache",
+            f"Found market board information in the cache, generated {dt//60:.0f} minutes {dt%60:.0f} seconds ago. Do you want to re-load?",
+            QMessageBox.Yes | QMessageBox.No,
+            defaultButton=QMessageBox.No,
+        )
+        if reply == QMessageBox.No:
+            return
+
+        mbInfoPath = os.path.join("Cache", "mbInfoC.csv")
+        self.client.mbInfo = pd.read_csv(mbInfoPath, index_col=0)
+        logger.info(
+            f"Successfully loaded {len(self.client.mbInfo)} MBInfo entries from cache"
+        )
+        # self.eventPush("CLIENT_MBINFO_UPDATE")
 
     def launch(self):
 
