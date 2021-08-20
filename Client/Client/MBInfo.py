@@ -77,6 +77,8 @@ class MBInfo:
 
     def getBlacklisted(self, listingsList):
         blRetainers = self.getConfig("retainerBlacklist")
+        if blRetainers is None:
+            return np.nan
         for x in listingsList:
             retName = x["retainerName"]
             if retName in blRetainers:
@@ -85,6 +87,8 @@ class MBInfo:
 
     def getAlreadyListed(self, itemId):
         listings = self.getConfig("currentListings")
+        if listings is None:
+            return np.nan
         if itemId in listings:
             return "Already listed"
         return np.nan

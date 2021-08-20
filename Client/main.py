@@ -26,7 +26,11 @@ logger = logging.getLogger(__name__)
 
 BASE_CONFIG = {
     "connectedWorlds": ["Lich", "Odin", "Phoenix", "Zodiark", "Twintania"],
+    "currentListings": [],  # list of item ids
     "nSemaphores": 3,
+    "retainerBlacklist": [
+        # list of retainer names
+    ],
     "world": "Shiva",
 }
 
