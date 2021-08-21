@@ -30,7 +30,7 @@ class Metrics(customMetrics):
     @staticmethod
     def expectedCraftProfit(df):
         price = df[["averagePrice", "minPrice"]].min(axis=1)
-        return price - df["craftPrice"]
+        return price * 0.95 - df["craftPrice"]  # dont forget the fee!
 
     @staticmethod
     def expectedCraftProfitPerDay(df):

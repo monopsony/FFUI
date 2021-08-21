@@ -5,6 +5,12 @@ import numpy as np
 logger = logging.getLogger(__name__)
 UNIVERSALIS_BASE_URL = "https://universalis.app/api"
 
+COLUMN_NAME_REPLACE = {
+    "nqSaleVelocity": "salesPerDayNQ",
+    "hqSaleVelocity": "salesPerDayHQ",
+    "regularSaleVelocity": "salesPerDay",
+}
+
 
 class Connector:
     def __init__(self):
@@ -33,6 +39,10 @@ class Connector:
             r = await session.get(query)
             if r.status == 200:
                 ret = await r.json()
+                # REPLACE SOME COLUMN NAMES
+                for old, new in COLUMN_NAME_REPLACE.items():
+                    ret[new] = ret.pop(old)
+
             elif r.status == 404:
                 logger.error(f"Status code 404 for query {query}. Skipping")
             elif r.status == 429:

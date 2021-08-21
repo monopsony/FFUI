@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 # giving mbInfo these columns by default avoids errors when the first item
 # searched doesnt exist on market board as well as other things
 # need to keep updating this if more columns are added further down the line
+
 DEFAULT_COLUMNS = [
     "Name",
     "Quality",
@@ -110,16 +111,6 @@ class MBInfo:
 
         d = self.gatherUniversalisQueries(zip(ids, worlds))
         d = pd.DataFrame(d, index=index, columns=DEFAULT_COLUMNS)
-
-        # change name of some columns
-        d.rename(
-            columns={
-                "nqSaleVelocity": "salesPerDayNQ",
-                "hqSaleVelocity": "salesPerDayHQ",
-                "regularSaleVelocity": "salesPerDay",
-            },
-            inplace=True,
-        )
 
         # add additional columns
         d["Name"] = names
