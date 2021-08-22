@@ -12,12 +12,13 @@ from widgets.itemList.itemList import itemList
 from widgets.listCreate.listCreate import listCreate
 from widgets.listsList.listsList import listsList
 from widgets.leftTabs.leftTabs import leftTabs
+from widgets.toolsTab.toolsTab import toolsTab
 from Client.Client import Client
 from Loader import Loader
 import sys, traceback, os, json
 import pandas as pd
 from Events import EventClass
-import logging
+import logging, clipboard
 
 # import qtmodern.styles
 # import qtmodern.windows
@@ -83,6 +84,13 @@ class Launcher(EventClass):
         ltwidget.createListsTab = clwidget
         ltwidget.tabWidget.addTab(clwidget, "Create List")
 
+        # CREATE EXTRAS LIST
+        twidget = toolsTab(self)
+        self.uiElements["tools"] = twidget
+
+        ltwidget.toolsTab = twidget
+        ltwidget.tabWidget.addTab(twidget, "Tools")
+
         self.mainWindow.show()
 
     def createMenuBar(self):
@@ -106,6 +114,47 @@ class Launcher(EventClass):
             f"Successfully loaded {len(self.client.mbInfo)} MBInfo entries from cache"
         )
         # self.eventPush("CLIENT_MBINFO_UPDATE")
+
+    clipboardWatcher = None
+    clipboardDependencies = []
+
+    def checkClipboardWatch(self):
+        for widget in self.clipboardDependencies:
+            if not widget.isHidden():
+                return
+
+        # if it hasnt returned by now it means no widget is shown that needs it
+        self.stopClipboardWatcher()
+
+    def startClipboardWatcher(self):
+        if self.clipboardWatcher is None:
+            timer = QtCore.QTimer()
+            timer.timeout.connect(self.checkClipboard)
+            timer.setInterval(int(0.1 * 1000))  # milliseconds
+            self.clipboardWatcher = timer
+
+        timer = self.clipboardWatcher
+        if timer.isActive():
+            return
+        timer.start()
+        logger.info(f"Started clipboard watch")
+
+    def stopClipboardWatcher(self):
+        if (self.clipboardWatcher is None) or (not self.clipboardWatcher.isActive()):
+            return
+
+        self.clipboardWatcher.stop()
+        logger.info(f"Stopped clipboard watch")
+
+    lastClipboardValue = None
+
+    def checkClipboard(self):
+        value = clipboard.paste()
+        if (self.lastClipboardValue is not None) and (value == self.lastClipboardValue):
+            return
+
+        self.eventPush("CLIPBOARD_CHANGED", value, self.lastClipboardValue)
+        self.lastClipboardValue = value
 
     def launch(self):
 
@@ -173,16 +222,22 @@ class Launcher(EventClass):
         with open("config.json", "w") as f:
             f.write(json.dumps(self.config, indent=2, sort_keys=True))
 
-    def getConfig(self, path):
+    def getConfig(self, path, base=False):
+        d = None
+        config = (base and BASE_CONFIG) or self.config
         if type(path) != list:
-            return self.config.get(path, None)
-        d = self.config
-        for x in path:
-            d = d.get(x, None)
-            if d is None:
-                return None
+            d = config.get(path, None)
+        else:
+            d = config
+            for x in path:
+                d = d.get(x, None)
+                if d is None:
+                    break
 
-        return d
+        if (not base) and (d is None):
+            return self.getConfig(path, base=True)
+        else:
+            return d
 
     def setConfig(self, path, value):
         if type(path) != list:

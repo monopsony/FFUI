@@ -39,6 +39,7 @@ class Ui_Form(object):
         self.itemImage.setObjectName("itemImage")
         self.horizontalLayout.addWidget(self.itemImage)
         self.titleLabel = QtWidgets.QLabel(self.topFrame)
+        self.titleLabel.setStyleSheet("")
         self.titleLabel.setObjectName("titleLabel")
         self.horizontalLayout.addWidget(self.titleLabel)
         self.verticalLayout.addWidget(self.topFrame)

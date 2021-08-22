@@ -6,14 +6,15 @@ from Events import EventWidgetClass
 
 
 class itemPeek(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
-    def __init__(self, launcher, *args, **kwargs):
+    def __init__(self, launcher, suppressEventSubscribe=False, *args, **kwargs):
         self.launcher = launcher
         super().__init__(*args, **kwargs)
 
         self.setupUi(self)
-        self.eventSubscribe("ITEMLIST_ITEM_SELECTED", self.applyItem)
+        if not suppressEventSubscribe:
+            self.eventSubscribe("ITEMLIST_ITEM_SELECTED", self.applyItem)
 
-    def applyItem(self, item, col):
+    def applyItem(self, item, col=0):
         self.titleLabel.setText(item["Name"])
         client = self.launcher.client
 

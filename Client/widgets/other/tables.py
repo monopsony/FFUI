@@ -338,13 +338,17 @@ class listCraftTable(genericListTable, pandaTable):
             base=True,
         )
 
-    def getSelectedItems(self):
+    def getSelectedItems(self, filterBlacklisted=False):
         client = self.launcher.client
         selectedIndices = self.tableView.selectionModel().selectedIndexes()
         rows = [x.row() for x in selectedIndices]
         data = self.model._data
         itemSet = set()
         for row in rows:
+            if filterBlacklisted:
+                bl = data.loc[row, "blacklisted"]
+                if (type(bl) != float) or (not np.isnan(bl)):
+                    continue
             itemName = data.at[data.index[row], "Name"]
             item = client.getItem(name=itemName)
             if item is None:
@@ -355,10 +359,12 @@ class listCraftTable(genericListTable, pandaTable):
 
         return itemSet
 
-    def getTopItems(self, N):
+    def getTopItems(self, N, filterBlacklisted=False):
         client = self.launcher.client
         itemSet = set()
         data = self.model._data
+        if filterBlacklisted:
+            data = data[data["blacklisted"].isna()]
         for row in range(len(data)):
             itemName = data.at[data.index[row], "Name"]
             item = client.getItem(name=itemName)

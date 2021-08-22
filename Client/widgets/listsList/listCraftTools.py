@@ -20,7 +20,7 @@ class listCraftTools(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
 
     def craftSelected(self):
         tbl = self.table
-        items = tbl.getSelectedItems()
+        items = tbl.getSelectedItems(filterBlacklisted=True)
 
         self.launcher.client.ffxivCraftItems(items)
 
@@ -34,5 +34,5 @@ class listCraftTools(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         except ValueError:
             return
 
-        items = tbl.getTopItems(N)
+        items = tbl.getTopItems(N, filterBlacklisted=True)
         self.launcher.client.ffxivCraftItems(items)

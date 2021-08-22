@@ -8,6 +8,11 @@ QToolTip
      opacity: 100;
 }
 
+QWidget#toolConfigWidget
+{
+    border: 2px solid #b1b1b1;
+}
+
 QWidget
 {
     font: 11pt "Arial";
