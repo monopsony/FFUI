@@ -105,7 +105,7 @@ class itemList(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
 
     def subscribeToEvents(self):
         self.eventSubscribe("ITEMLISTTABLE_DATA_SELECTED", self.applyItemSelection)
-        self.eventSubscribe("CLIENT_ITEMS_LAODED", self.displayItems)
+        self.eventSubscribe("CLIENT_ITEMS_LOADED", self.displayItems)
 
     def displayItems(self):
         # self.setItems(self.launcher.client.items[["NameKey", "Name", "Icon"]])

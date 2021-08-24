@@ -128,7 +128,7 @@ class listCreate(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         self.maxStackSizeEdit.setValidator(QtGui.QIntValidator(0, 999))
 
     def subscribeToEvents(self):
-        self.eventSubscribe("CLIENT_ITEMS_LAODED", self.displayItems)
+        self.eventSubscribe("CLIENT_ITEMS_LOADED", self.displayItems)
         self.eventSubscribe("LISTCREATE_LIST_CHANGED", self.applyListChanged)
 
     def displayItems(self):

@@ -45,7 +45,7 @@ class RecipeHandler:
 
         # self.recipes.sort_values("Name", inplace=True, ignore_index=True)
         logger.info(f"Loaded a total of {len(self.recipes)} RECIPES")
-        self.eventPush("CLIENT_RECIPES_LAODED")
+        self.eventPush("CLIENT_RECIPES_LOADED")
 
     def getRecipe(self, item):
         df = self.recipes

@@ -144,7 +144,7 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
             self.createItemRecipeCombined()
 
         self.items = pd.read_csv(ITEMS_COMBINED_FILE)
-        self.eventPush("CLIENT_ITEMS_LAODED")
+        self.eventPush("CLIENT_ITEMS_LOADED")
         logger.info(f"Loaded a total of {len(self.items)} items")
 
     currentlyLoadingCache = False
