@@ -25,4 +25,4 @@ class retListConfig(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         if rlTool.isHidden():
             return
 
-        rlToo.hide()
+        rlTool.hide()

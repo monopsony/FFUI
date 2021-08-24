@@ -22,7 +22,7 @@ if not os.path.exists(customMetricsPath):
         f.write(customMetricsString)
 
 custom = importlib.import_module("Client.MetricsCustom")
-ACTIVE_METRICS = custom.ACTIVE_METRICS
+ACTIVE_METRICS_CUSTOM = custom.ACTIVE_METRICS
 customMetrics = custom.Metrics
 
 
@@ -37,5 +37,24 @@ class Metrics(customMetrics):
         return df["expectedCraftProfit"] * df["salesPerDay"]
 
 
-ACTIVE_METRICS["CRAFT"]["expectedCraftProfit"] = Metrics.expectedCraftProfit
-ACTIVE_METRICS["CRAFT"]["expectedCraftProfitPerDay"] = Metrics.expectedCraftProfitPerDay
+ACTIVE_METRICS = {
+    "INFO": {},  # {nameOfMetrics: Metrics.nameOfMethod, ...}
+    "CRAFT": {
+        "expectedCraftProfit": Metrics.expectedCraftProfit,
+        "expectedCraftProfitPerDay": Metrics.expectedCraftProfitPerDay,
+    },
+    "FLIP": {},
+}
+
+
+for typ in ["INFO", "CRAFT", "FLIP"]:
+    d = ACTIVE_METRICS_CUSTOM[typ]
+    for k, v in d.items():
+        ACTIVE_METRICS[typ][k] = v
+
+# why not just use the same dictionary from customMetrics
+# --> to have the Metrics here be first in the ordering, mainly
+
+
+# ACTIVE_METRICS["CRAFT"]["expectedCraftProfit"] = Metrics.expectedCraftProfit
+# ACTIVE_METRICS["CRAFT"]["expectedCraftProfitPerDay"] = Metrics.expectedCraftProfitPerDay

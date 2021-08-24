@@ -37,7 +37,9 @@ class Ui_Form(object):
         self.hideButton = QtWidgets.QPushButton(self.frame)
         self.hideButton.setObjectName("hideButton")
         self.horizontalLayout.addWidget(self.hideButton)
-        spacerItem = QtWidgets.QSpacerItem(454, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(
+            454, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.horizontalLayout.addItem(spacerItem)
         self.verticalLayout_2.addWidget(self.frame)
         self.verticalLayout.addWidget(self.toolConfigWidget)
