@@ -51,7 +51,6 @@ for typ in ["INFO", "CRAFT", "FLIP"]:
     d = ACTIVE_METRICS_CUSTOM[typ]
     for k, v in d.items():
         ACTIVE_METRICS[typ][k] = v
-
 # why not just use the same dictionary from customMetrics
 # --> to have the Metrics here be first in the ordering, mainly
 

@@ -269,6 +269,7 @@ class pandaTable(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
                     f"No text was given to pandatable {type(self)}, found `{text}` instead"
                 )
             try:
+                text = text.strip()
                 re.compile(text)
                 colData = data[self.filterKey]
                 truth = colData.str.contains(text.lower())
