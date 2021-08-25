@@ -51,6 +51,7 @@ class Launcher(EventClass):
         # create main window
         mainWindow = QMainWindow()
         self.uiElements["mainWindow"] = mainWindow
+        mainWindow.setWindowIcon(QtGui.QIcon("ChickenHead.png"))
         self.mainWindow = mainWindow
         mainWindow.resize(1700, 1200)
         mainWindow.setWindowTitle("Sapphire Avenue Exchange")
