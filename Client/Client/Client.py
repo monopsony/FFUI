@@ -241,7 +241,7 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
     def getIconPath(self, iconId):
         iconId = int(iconId)
         dir2 = str(iconId // 1000 * 1000).zfill(6)
-        png = str(iconId).zfill(6) + ".png"
+        png = str(iconId).zfill(6) + "_hr1.png"
 
         path = os.path.join("icon", dir2, png)
         return path
