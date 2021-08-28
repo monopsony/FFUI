@@ -1,7 +1,8 @@
 from widgets.pandaTable.pandaTable import pandaTable
 import pandas as pd
 import numpy as np
-
+from PyQt5 import QtWidgets
+from numbers import Number
 from Client.Metrics import ACTIVE_METRICS
 
 
@@ -83,6 +84,63 @@ class itemCraftTable(pandaTable):
 
     def baseConfigPath(self):
         return ["tables", "itemCraftTable"]
+
+
+class qpItemCraftTable(pandaTable):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            *args,
+            eventName="QUICKPREVIEWITEMCRAFTTABLE",
+            verticalHeader=True,
+            cellHeight=25,
+            **kwargs,
+        )
+
+        self.eventSubscribe("CLIENT_MBINFO_UPDATE", self.refresh)
+        self.tableView.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.AdjustToContents
+        )
+
+    selectedItem = None
+
+    def updateSelectedItem(self, item, col=0):
+        self.selectedItem = item
+        self.refresh()
+
+    def refresh(self):
+        if self.selectedItem is None:
+            self.setEmpty()
+            return
+
+        client = self.launcher.client
+
+        if not client.hasItemInfo(self.selectedItem):
+            self.eventPush("CLIENT_MBCRAFT_REQUEST", self.selectedItem)
+            self.setEmpty()
+            return
+
+        info = client.mbGetItemInfo(self.selectedItem)
+        if np.isnan(info["craftPrice"]):
+            self.setEmpty()
+            return
+
+        cols = [
+            "craftPrice",
+            "salesPerDay",
+            "salesPerDayNQ",
+            "salesPerDayHQ",
+            "averagePrice",
+            "averagePriceNQ",
+            "averagePriceHQ",
+            "minPrice",
+            "minPriceNQ",
+            "minPriceHQ",
+        ]
+        cols += list(ACTIVE_METRICS["CRAFT"].keys())
+        self.setData(info, cols=cols, base=True)
+
+    def baseConfigPath(self):
+        return ["tables", "quickPreviewItemCraftTable"]
 
 
 class itemListingsTable(pandaTable):
@@ -181,6 +239,56 @@ class itemFlipTable(pandaTable):
 
     def baseConfigPath(self):
         return ["tables", "itemFlipTable"]
+
+
+class qpItemFlipTable(pandaTable):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            *args,
+            eventName="QUICKPREVIEWITEMFLIPTABLE",
+            verticalHeader=True,
+            horizontalHeader=True,
+            cellHeight=25,
+            **kwargs,
+        )
+
+        self.eventSubscribe("CLIENT_MBINFO_UPDATE", self.refresh)
+
+    selectedItem = None
+
+    def updateSelectedItem(self, item, col=0):
+        self.selectedItem = item
+        self.refresh()
+
+    def refresh(self):
+        if self.selectedItem is None:
+            self.setEmpty()
+            return
+
+        client = self.launcher.client
+
+        if not client.hasItemInfo(self.selectedItem, allWorlds=True):
+            self.eventPush("CLIENT_MBFLIP_REQUEST", self.selectedItem)
+            self.setEmpty()
+            return
+
+        info = client.mbGetItemInfo(self.selectedItem, allWorlds=True)
+
+        self.setData(
+            info,
+            cols=[
+                "minPrice",
+                "minPriceNQ",
+                "minPriceHQ",
+                "averagePrice",
+                "averagePriceNQ",
+                "averagePriceHQ",
+            ],
+            base=True,
+        )
+
+    def baseConfigPath(self):
+        return ["tables", "quickPreviewItemFlipTable"]
 
 
 class genericListTable:
@@ -347,7 +455,7 @@ class listCraftTable(genericListTable, pandaTable):
         for row in rows:
             if filterBlacklisted:
                 bl = data.loc[row, "blacklisted"]
-                if (type(bl) != float) or (not np.isnan(bl)):
+                if (not isinstance(bl, Number)) or (not np.isnan(bl)):
                     continue
             itemName = data.at[data.index[row], "Name"]
             item = client.getItem(name=itemName)

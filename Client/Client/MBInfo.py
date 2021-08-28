@@ -395,8 +395,13 @@ class MBInfo:
 
         self.eventPush("CLIENT_MBINFO_UPDATE")
 
+    nLastSaved = 0
+
     def saveMBInfoCache(self):
-        if len(self.mbInfo) < 10:
+        N = len(self.mbInfo)
+        if (
+            N - self.nLastSaved < 50
+        ):  # save only when at least 50 new items are there (arbitrary)
             return
         self.setProgress(
             progressText="Saving current MBInfo to cache",

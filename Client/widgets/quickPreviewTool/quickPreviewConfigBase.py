@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'retListConfigBase.ui'
+# Form implementation generated from reading ui file 'quickPreviewConfigBase.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(616, 98)
+        Form.resize(616, 146)
         Form.setStyleSheet("")
         self.verticalLayout = QtWidgets.QVBoxLayout(Form)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -40,6 +40,12 @@ class Ui_Form(object):
         spacerItem = QtWidgets.QSpacerItem(454, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.verticalLayout_2.addWidget(self.frame)
+        self.openAutoCB = QtWidgets.QCheckBox(self.toolConfigWidget)
+        self.openAutoCB.setObjectName("openAutoCB")
+        self.verticalLayout_2.addWidget(self.openAutoCB)
+        self.stayOnToPCB = QtWidgets.QCheckBox(self.toolConfigWidget)
+        self.stayOnToPCB.setObjectName("stayOnToPCB")
+        self.verticalLayout_2.addWidget(self.stayOnToPCB)
         self.verticalLayout.addWidget(self.toolConfigWidget)
 
         self.retranslateUi(Form)
@@ -48,6 +54,8 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
-        self.titleLabel.setText(_translate("Form", "Retainer Listings"))
+        self.titleLabel.setText(_translate("Form", "Quick Preview"))
         self.showButton.setText(_translate("Form", "Show"))
         self.hideButton.setText(_translate("Form", "Hide"))
+        self.openAutoCB.setText(_translate("Form", "Open automatically when crafting"))
+        self.stayOnToPCB.setText(_translate("Form", "Stay on top (might require restart)"))

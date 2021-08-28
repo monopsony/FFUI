@@ -5,6 +5,8 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem, QPixmap, QIcon
 from Events import EventWidgetClass
 from widgets.retListTool.retListTool import retListTool
 from widgets.retListTool.retListConfig import retListConfig
+from widgets.quickPreviewTool.quickPreviewTool import quickPreviewTool
+from widgets.quickPreviewTool.quickPreviewConfig import quickPreviewConfig
 
 
 class toolsTab(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
@@ -23,6 +25,9 @@ class toolsTab(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         rlConfig = retListConfig(self.launcher)
         layout.addWidget(rlConfig)
 
+        qpConfig = quickPreviewConfig(self.launcher)
+        layout.addWidget(qpConfig)
+
         spacerItem = QtWidgets.QSpacerItem(
             20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
         )
@@ -33,3 +38,7 @@ class toolsTab(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
         rlTool = retListTool(self.launcher)
         rlTool.hide()
         self.launcher.uiElements["retListTool"] = rlTool
+
+        qpTool = quickPreviewTool(self.launcher)
+        qpTool.hide()
+        self.launcher.uiElements["quickPreviewTool"] = qpTool

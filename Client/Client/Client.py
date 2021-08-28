@@ -229,6 +229,7 @@ class Client(QObject, EventClass, Connector, MBInfo, RecipeHandler):
 
         logger.info(f"Opening `{url}` in browser")
         self.openBrowserTab(url)
+        self.eventPush("CRAFTING_ITEMS")
 
     # PARAS
     def getConfig(self, *args, **kwargs):
