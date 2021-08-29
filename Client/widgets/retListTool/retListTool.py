@@ -45,14 +45,18 @@ class retListTool(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
 
     currentList = set()
 
+    active = False
+
     def showEvent(self, arg):
         logger.info("Opening retainer listings tool")
+        self.active = True
         self.launcher.startClipboardWatcher()
         self.currentList = set(self.launcher.getConfig("currentListings"))
         self.updateTable()
 
     def hideEvent(self, arg):
         logger.info("Closing retainer listings tool")
+        self.active = False
         self.launcher.checkClipboardWatch()
 
     def setClipboardLabel(self, value):
@@ -63,6 +67,8 @@ class retListTool(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             self.label.setText(f"Clipboard: {value}")
 
     def clipboardEvent(self, newValue, oldValue):
+        if not self.active:
+            return
         self.setClipboardLabel(newValue)
         if newValue is None:
             return

@@ -58,12 +58,16 @@ class quickPreviewTool(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             self.show()
             self.setFocus()
 
+    active = False
+
     def showEvent(self, arg):
         logger.info("Opening quick preview tool")
+        self.active = True
         self.launcher.startClipboardWatcher()
 
     def hideEvent(self, arg):
         logger.info("Closing quick preview tool")
+        self.active = False
         self.launcher.checkClipboardWatch()
 
     def setClipboardLabel(self, value):
@@ -74,6 +78,8 @@ class quickPreviewTool(EventWidgetClass, QtWidgets.QWidget, Ui_Form):
             self.label.setText(f"Clipboard: {value}")
 
     def clipboardEvent(self, newValue, oldValue):
+        if not self.active:
+            return
         self.setClipboardLabel(newValue)
         if newValue is None:
             return
