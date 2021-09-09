@@ -265,7 +265,58 @@ class Launcher(EventClass):
         self.eventHandle()  # custom events
 
 
+def cleanupIcons():
+    from Client.Client import ITEMS_FILE
+    import shutil, re, glob
+
+    if not os.path.exists(ITEMS_FILE):
+        logger.error(f"No file found under {ITEMS_FILE}. Help.")
+        return
+
+    r = pd.read_csv(ITEMS_FILE)
+    ids = set(r["Icon"].tolist())
+
+    # remove hq dirs
+    deletedDirectories = 0
+    pattern = re.compile("(\d+)")
+    deletedIcons = 0
+    for path in glob.glob(os.path.join("icon", "*", "*")):
+
+        if path.endswith(".png"):
+            iconId = pattern.search(os.path.basename(path))
+            if iconId is None:
+                print(f"No regex fit for {path}")
+                continue
+
+            if int(iconId.group(1)) in ids:
+                continue
+
+            os.remove(path)
+            deletedIcons += 1
+
+        elif os.path.isdir(path):
+            shutil.rmtree(path)
+            deletedDirectories += 1
+
+        else:
+            print(f"Path {path} did not fit in any pattern")
+
+    # remove empty dirs
+    for path in glob.glob(os.path.join("icon", "*")):
+        if os.path.isdir(path) and len(os.listdir(path)) == 0:
+            shutil.rmtree(path)
+            deletedDirectories += 1
+
+    print(
+        f"Done cleaning up, deleted {deletedDirectories} directories and {deletedIcons} icons"
+    )
+
+
 if __name__ == "__main__":
+
+    if (len(sys.argv) > 1) and (sys.argv[1] == "cleanup"):
+        cleanupIcons()
+        sys.exit("Cleaned up icons")
 
     logging.basicConfig(
         level=logging.DEBUG,

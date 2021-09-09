@@ -30,7 +30,9 @@ class Metrics(customMetrics):
     @staticmethod
     def expectedCraftProfit(df):
         price = df[["averagePrice", "minPrice"]].min(axis=1)
-        return price * 0.95 - df["craftPrice"]  # dont forget the fee!
+        return price * 0.95 * 0.97 - df["craftPrice"]
+        # 0.95 for buyers tax (prices in universalis are displayed with buyers tax in mind)
+        # 0.97 for sellers tax (assuming retainers in crystarium/ishgard or whatever)
 
     @staticmethod
     def expectedCraftProfitPerDay(df):
